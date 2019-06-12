@@ -1,6 +1,7 @@
 import os
 import slack
 from groups_read import get_groups_list
+from groups_write import join_channel
 from flask import abort, Flask, jsonify, request
 from urllib.parse import unquote
 
@@ -32,4 +33,15 @@ def list_groups():
         return private_message_nudge
     
     return get_groups_list(request)
+
+
+@app.route('/join', methods=['POST'])
+def join_channel():
+    if not _is_request_valid(request):
+        abort(400)
+    
+    if not _is_private_message(request):
+        return private_message_nudge
+
+    return request_to_join_group(request)
 
