@@ -1,7 +1,7 @@
 import os
 import slack
 from groups_read import get_groups_list
-from groups_write import join_channel
+from groups_write import join_channel, confirm_invite
 from flask import abort, Flask, jsonify, request
 from urllib.parse import unquote
 
@@ -44,4 +44,21 @@ def join_channel():
         return private_message_nudge
 
     return request_to_join_group(request)
+
+
+@app.route('/confirm_invite', methods=['GET', 'POST'])
+def confirm_invite():
+    auth_code = request.args['code']
+    client = slack.WebClient(token='')
+
+    response = client.oauth_access(
+        client_id=client_id,
+        client_secret=client_secret,
+        code=auth_code
+    )
+
+    oauth_token = response['access_token']
+    raw_state = unquote(request.args['state'])
+
+    return invite_user_to_group(raw_state, oauth_token)
 

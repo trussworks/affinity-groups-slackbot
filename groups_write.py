@@ -50,3 +50,21 @@ def request_to_join_group(request):
 
     return f"Alright! I've posted the following message to the private channel:\n> { invite_user_string }"
 
+
+def invite_user_to_group(oauth_state, access_token):
+    oauth_state = oauth_state.split(state_divider)
+    invite_user_id = oauth_state[0]
+    invite_channel_id = oauth_state[1]
+
+    # Permissions note:
+    # This must be a user token (xoxp) from a user who is already in the private channel.
+    client = slack.WebClient(token=access_token)
+    response = client.api_call(
+        api_method='groups.invite',
+        params={'channel': invite_channel_id, 'user': invite_user_id}
+    )
+    assert response['ok']
+    import pdb; pdb.set_trace()
+
+    return 'Invited new user to the channel!'
+
