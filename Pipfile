@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 flask = "*"
 slackclient = "~=2.0.0"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"

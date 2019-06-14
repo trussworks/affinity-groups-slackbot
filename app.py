@@ -1,7 +1,7 @@
 import os
 import slack
 from groups_read import get_groups_list
-from groups_write import join_channel, confirm_invite
+from groups_write import *
 from flask import abort, Flask, jsonify, request
 from urllib.parse import unquote
 
@@ -48,6 +48,8 @@ def join_channel():
 
 @app.route('/confirm_invite', methods=['GET', 'POST'])
 def confirm_invite():
+    import pdb; pdb.set_trace()    
+
     auth_code = request.args['code']
     client = slack.WebClient(token='')
 
