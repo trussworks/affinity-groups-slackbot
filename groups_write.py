@@ -64,7 +64,6 @@ def invite_user_to_group(oauth_state, access_token):
         params={'channel': invite_channel_id, 'user': invite_user_id}
     )
     assert response['ok']
-    import pdb; pdb.set_trace()
 
     return 'Invited new user to the channel!'
 
