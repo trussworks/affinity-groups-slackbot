@@ -6,11 +6,12 @@ client_id = os.environ['SLACK_CLIENT_ID']
 oauth_scope = 'groups:write'
 redirect_uri = os.environ['REDIRECT_URI']
 invite_user_string = 'Someone would like to join this affinity group. Press the confirm button to invite that user.'
-oauth_URI = f'https://slack.com/oauth/authorize?scope={ oauth_scope }&client_id={ client_id }&redirect_uri={ redirect_uri }'
+oauth_URI = f'https://slack.com/oauth/authorize?scope={ oauth_scope }'\
+    f'&client_id={ client_id }&redirect_uri={ redirect_uri }'
 state_divider = '@@!!@@!!@@'
 
 
-# TODO: obfuscate state in some way
+# TODO: obfuscate state in some way?
 def _get_invite_user_blocks(invite_user_id, invite_channel_id):
     return [
         {
@@ -66,4 +67,3 @@ def invite_user_to_group(oauth_state, access_token):
     assert response['ok']
 
     return 'Invited new user to the channel!'
-

@@ -1,0 +1,15 @@
+{
+    "comment": "relaxed markdownlint rules",
+
+    "default": true,
+    "whitespace": true,
+    "line_length": false,
+    "ul-start-left": false,
+    "ul-indent": true,
+    "no-inline-html": false,
+    "no-bare-urls": false,
+    "fenced-code-language": false,
+    "first-line-h1": false,
+    "no-multiple-blanks": false,
+    "MD029": { "style": "ordered" }
+}

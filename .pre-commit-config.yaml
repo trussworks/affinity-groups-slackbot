@@ -1,0 +1,14 @@
+repos:
+  - repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: v2.1.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trimming trailing whitespace
+      - id: flake8
+        name: Linting python files (for config, see .flake8)
+
+  - repo: git://github.com/igorshubovych/markdownlint-cli
+    rev: v0.5.0
+    hooks:
+      - id: markdownlint
+        name: Linting markdown files (for config, see .markdownlint.json)
