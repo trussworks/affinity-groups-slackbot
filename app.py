@@ -8,7 +8,6 @@ from urllib.parse import unquote
 app = Flask(__name__)
 client_id = os.environ['SLACK_CLIENT_ID']
 client_secret = os.environ['SLACK_CLIENT_SECRET']
-oauth_scope = os.environ['SLACK_BOT_SCOPE']
 private_message_nudge = 'Please direct message me to get the list or join a channel. :slightly_smiling_face:'
 
 
@@ -48,15 +47,14 @@ def join_channel():
 
 @app.route('/confirm_invite', methods=['GET', 'POST'])
 def confirm_invite():
-    import pdb; pdb.set_trace()    
-
     auth_code = request.args['code']
     client = slack.WebClient(token='')
 
     response = client.oauth_access(
         client_id=client_id,
         client_secret=client_secret,
-        code=auth_code
+        code=auth_code,
+        redirect_uri=redirect_uri,
     )
 
     oauth_token = response['access_token']
