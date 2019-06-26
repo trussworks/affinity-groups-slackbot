@@ -3,9 +3,22 @@ repos:
     rev: v2.1.0
     hooks:
       - id: trailing-whitespace
-        name: Trimming trailing whitespace
+        name: Trim trailing whitespace
+
+      - id: requirements-txt-fixer
+        name: Sort requirements.txt
+
+      - id: debug-statements
+        name: No illegal import or breakpoint calls
+
       - id: flake8
-        name: Linting python files (for config, see .flake8)
+        name: Lint python files (for config, see .flake8)
+
+      - id: check-merge-conflict
+        name: Files should not have merge conflict strings
+
+      - id: detect-private-key
+        name: No private keys in source control
 
   - repo: git://github.com/igorshubovych/markdownlint-cli
     rev: v0.5.0
