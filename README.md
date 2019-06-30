@@ -29,6 +29,15 @@ To spin up a server locally, use command `flask run`. If you have `ngrok` instal
 You can run the tests from project root with command `pipenv run pytest`.
 
 
+### deploying code to production
+
+For Truss's instance of this bot, we have configured this to happen automatically on new commits to the `master` branch -- if and only if CI is passing.
+
+If you're forking this code as part of installing this app to your Slack workspace, you can ignore the above.
+
+If you plan to install this app unchanged, feel free to wire your Heroku backend the same way.
+
+
 ## prod installation instructions
 
 To stand up an instance of this slackbot for your own workspace, you'll also need:
