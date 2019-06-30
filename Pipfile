@@ -10,6 +10,8 @@ pytest = "*"
 flask = "*"
 slackclient = "~=2.0.0"
 gunicorn = "*"
+coverage = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.7"
