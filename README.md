@@ -2,6 +2,8 @@
 
 We made this slackbot to allow folks to opt into private affinity groups within a Slack workspace without having to out themselves or forcing a public point of contact for the group to out themselves.
 
+[![CircleCI](https://circleci.com/gh/trussworks/affinity-groups-slackbot.svg?style=svg&circle-token=7145d7dd160c1a661facf0e7709bd733dbad76d0)](https://circleci.com/gh/trussworks/affinity-groups-slackbot)
+
 
 ## dev environment
 
@@ -14,15 +16,18 @@ To work with the slackbot & test locally, you'll need:
 - Some environment variables as described in installation below
 - Some linting is performed by pre-commit, so don't forget to `pre-commit install`
 
+
 ### working with the code
 
 Install dependencies with command `pipenv install` and keep them up-to-date with `pipenv sync`.
 
 To spin up a server locally, use command `flask run`. If you have `ngrok` installed, you can test that local server against a live Slack workspace. Note: You will need to reconfigure the Slack integration's slash commands & allowed oauth redirect URIs every time you generate a new Ngrok proxy. (See more detailed instructions for that below.)
 
+
 ### running the tests
 
 You can run the tests from project root with command `pipenv run pytest`.
+
 
 ## prod installation instructions
 

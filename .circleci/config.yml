@@ -1,0 +1,26 @@
+version: 2.1
+jobs:
+  lint_and_test_code:
+    docker:
+      - image: trussworks/circleci-docker-primary:d8c0638e8a9d5e15cfd3b23a056f3804d27edceb
+    steps:
+      - checkout
+      - run:
+          name: Run pre-commit hooks on all files
+          command: pre-commit run --all-files
+      - run:
+          name: Install dev dependencies
+          command: pipenv sync --dev
+      - run:
+          name: Run Python tests
+          command: pipenv run pytest
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+          destination: tr1
+workflows:
+  version: 2.1
+  pipeline:
+    jobs:
+      - lint_and_test_code

@@ -2,7 +2,7 @@ import os
 import slack
 
 
-RESPONSE_BASE='Here is the list of affinity groups & the commands you can run to join each of them.\n'
+RESPONSE_BASE = 'Here is the list of affinity groups & the commands you can run to join each of them.\n'
 
 
 def get_groups_list(request):
@@ -35,9 +35,8 @@ def _build_list_response(slack_response):
         response += f":slack: *{ c['name'] }* --"
         response += '(No topic provided)' if c['topic'] == '' else c['topic']
         response += f" -- `/join-group { c['id'] }`\n"
-    
+
     if response == RESPONSE_BASE:
         response = 'No affinity groups found. :('
-    
-    return response
 
+    return response

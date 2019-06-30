@@ -1,14 +1,15 @@
 import os
 import slack
 from groups_read import get_groups_list
-from groups_write import *
-from flask import abort, Flask, jsonify, request
+from groups_write import request_to_join_group, invite_user_to_group
+from flask import abort, Flask, request
 from urllib.parse import unquote
 
 app = Flask(__name__)
 client_id = os.environ['SLACK_CLIENT_ID']
 client_secret = os.environ['SLACK_CLIENT_SECRET']
 private_message_nudge = 'Please direct message me to get the list or join a channel. :slightly_smiling_face:'
+redirect_uri = os.environ['REDIRECT_URI']
 
 
 def _is_request_valid(request):
@@ -27,10 +28,10 @@ def _is_private_message(request):
 def list_groups():
     if not _is_request_valid(request):
         abort(400)
-    
+
     if not _is_private_message(request):
         return private_message_nudge
-    
+
     return get_groups_list(request)
 
 
@@ -38,7 +39,7 @@ def list_groups():
 def join_channel():
     if not _is_request_valid(request):
         abort(400)
-    
+
     if not _is_private_message(request):
         return private_message_nudge
 
@@ -61,4 +62,3 @@ def confirm_invite():
     raw_state = unquote(request.args['state'])
 
     return invite_user_to_group(raw_state, oauth_token)
-
