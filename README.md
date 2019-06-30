@@ -8,10 +8,21 @@ We made this slackbot to allow folks to opt into private affinity groups within 
 To work with the slackbot & test locally, you'll need:
 
 - Python 3.6 or higher
+  - Pipenv
 - Ngrok, Heroku, or some other way to expose the app to the web
+  - Ngrok strongly recommended for local development
 - Some environment variables as described in installation below
 - Some linting is performed by pre-commit, so don't forget to `pre-commit install`
 
+### working with the code
+
+Install dependencies with command `pipenv install` and keep them up-to-date with `pipenv sync`.
+
+To spin up a server locally, use command `flask run`. If you have `ngrok` installed, you can test that local server against a live Slack workspace. Note: You will need to reconfigure the Slack integration's slash commands & allowed oauth redirect URIs every time you generate a new Ngrok proxy. (See more detailed instructions for that below.)
+
+### running the tests
+
+You can run the tests from project root with command `pipenv run pytest`.
 
 ## prod installation instructions
 
