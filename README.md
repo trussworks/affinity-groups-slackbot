@@ -5,6 +5,22 @@ We made this slackbot to allow folks to opt into private affinity groups within 
 [![CircleCI](https://circleci.com/gh/trussworks/affinity-groups-slackbot.svg?style=svg&circle-token=7145d7dd160c1a661facf0e7709bd733dbad76d0)](https://circleci.com/gh/trussworks/affinity-groups-slackbot)
 
 
+## slackbot loose to do list
+
+- [x] pytest one passing test NO INTERNET REQUIRED
+- [x] git clone bongo-saber
+- [x] wire up circleCI
+- [x] confirm API req to edit confirm invite message
+- [x] then do it
+- [ ] cut ~~AWS CLI creds for terraform in truss-infra INTERNET FOR INIT/PLAN~~
+- [ ] find some resources for mocking objects in pytest
+- [x] add fail coverage to circleCI
+- [ ] write enough tests to pass
+- if time, in bot repo:
+  - [ ] cut per below ~~investigate terraform heroku~~
+  - [x] investigate synchronized state things + any additional oddness from OSS tf
+
+
 ## dev environment
 
 To work with the slackbot & test locally, you'll need:
