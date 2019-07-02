@@ -5,7 +5,7 @@ import slack
 RESPONSE_BASE = 'Here is the list of affinity groups & the commands you can run to join each of them.\n'
 
 
-def get_groups_list(request):
+def get_groups_list():
     # Permissions note:
     # Bot presence (in a channel) is how we're managing which channels show in the list.
     # Thus, this must be some form of bot token (xoxb). Only groups.list scope is required.
@@ -28,7 +28,7 @@ def _grab_channel_info(channel_blob):
 
 
 def _build_list_response(slack_response):
-    channels = map(_grab_channel_info, slack_response["channels"])
+    channels = map(_grab_channel_info, slack_response['channels'])
     response = RESPONSE_BASE
 
     for c in channels:
@@ -37,6 +37,6 @@ def _build_list_response(slack_response):
         response += f" -- `/join-group { c['id'] }`\n"
 
     if response == RESPONSE_BASE:
-        response = 'No affinity groups found. :('
+        response = 'No affinity groups found. To populate this list, add Affinity Groups Bot to private channels.'
 
     return response

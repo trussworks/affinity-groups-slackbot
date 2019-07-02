@@ -32,7 +32,7 @@ def list_groups():
     if not _is_private_message(request):
         return private_message_nudge
 
-    return get_groups_list(request)
+    return get_groups_list()
 
 
 @app.route('/join', methods=['POST'])
