@@ -44,7 +44,8 @@ def request_to_join_group(request):
     # permissions to post messages to a private channel they're not already part of.
     client = slack.WebClient(token=os.environ['SLACK_BOT_USER_TOKEN'])
     group_to_join = request.form['text']
-    invite_user_button = _get_invite_user_blocks(request.form['user_id'], group_to_join)
+    user_requesting_to_join = request.form['user_id']
+    invite_user_button = _get_invite_user_blocks(user_requesting_to_join, group_to_join)
 
     response = client.chat_postMessage(
         channel=group_to_join,
@@ -55,8 +56,9 @@ def request_to_join_group(request):
     response = client.chat_update(
         channel=group_to_join,
         ts=message_id,
-        blocks=_get_invite_user_blocks(request.form['user_id'], group_to_join, message_id)
+        blocks=_get_invite_user_blocks(user_requesting_to_join, group_to_join, message_id)
     )
+    assert response['ok']
 
     return f"Alright! I've posted the following message to the private channel:\n> { invite_user_string }"
 
