@@ -1,16 +1,16 @@
 import slack
 from . import create_app
-import app.groups_read
-import app.groups_write
+import app.groups_read as groups_read
+import app.groups_write as groups_write
 from flask import abort, request
 from urllib.parse import unquote
 
-app = create_app()
+flask_app = create_app()
 
 PRIVATE_MESSAGE_NUDGE = 'Please direct message me to get the list or join a channel. :slightly_smiling_face:'
 
 
-def slack_web_client(token=app.config['SLACK_BOT_USER_TOKEN']):
+def slack_web_client(token=flask_app.config['SLACK_BOT_USER_TOKEN']):
     return slack.WebClient(token=token)
 
 
@@ -23,18 +23,18 @@ def _is_private_message(form_data):
     return form_data['channel_name'] == 'directmessage'
 
 
-@app.route('/list', methods=['POST'])
+@flask_app.route('/list', methods=['POST'])
 def list_groups():
-    if not _is_request_valid(request, app.config['SLACK_VERIFICATION_TOKEN'], app.config['SLACK_TEAM_ID']):
+    if not _is_request_valid(request, flask_app.config['SLACK_VERIFICATION_TOKEN'], flask_app.config['SLACK_TEAM_ID']):
         abort(400)
 
     if not _is_private_message(request):
         return PRIVATE_MESSAGE_NUDGE
 
-    return get_groups_list()
+    return groups_read.get_groups_list()
 
 
-@app.route('/join', methods=['POST'])
+@flask_app.route('/join', methods=['POST'])
 def join_channel():
     form_data = request.form
     if not _is_request_valid(form_data):
@@ -43,22 +43,22 @@ def join_channel():
     if not _is_private_message(form_data):
         return PRIVATE_MESSAGE_NUDGE
 
-    return request_to_join_group(form_data, app.config['OAUTH_URI'])
+    return groups_write.request_to_join_group(form_data, flask_app.config['OAUTH_URI'])
 
 
-@app.route('/confirm_invite', methods=['GET', 'POST'])
+@flask_app.route('/confirm_invite', methods=['GET', 'POST'])
 def confirm_invite():
     auth_code = request.args['code']
     client = slack_web_client('')
 
     response = client.oauth_access(
-        client_id=app.config['SLACK_CLIENT_ID'],
-        client_secret=app.config['SLACK_CLIENT_SECRET'],
+        client_id=flask_app.config['SLACK_CLIENT_ID'],
+        client_secret=flask_app.config['SLACK_CLIENT_SECRET'],
         code=auth_code,
-        redirect_uri=app.config['REDIRECT_URI'],
+        redirect_uri=flask_app.config['REDIRECT_URI'],
     )
 
     oauth_token = response['access_token']
     raw_state = unquote(request.args['state'])
 
-    return invite_user_to_group(raw_state, oauth_token)
+    return groups_write.invite_user_to_group(raw_state, oauth_token)

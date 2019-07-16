@@ -1,4 +1,4 @@
-import app.bot
+import app.bot as bot
 
 INVITE_USER_STRING = 'Someone would like to join this affinity group. Press the confirm button to invite that user.'
 USER_INVITED_STRING = 'New user invited to the channel!'
@@ -34,7 +34,7 @@ def request_to_join_group(form_data, oauth_URI):
     # Permissions note:
     # This must be some form of bot token (xoxb), since the calling user will not have
     # permissions to post messages to a private channel they're not already part of.
-    client = app.bot.slack_web_client()
+    client = bot.slack_web_client()
     group_to_join = form_data['text']
     user_requesting_to_join = form_data['user_id']
     invite_user_button = _get_invite_user_blocks(user_requesting_to_join, group_to_join, oauth_URI)
@@ -66,7 +66,7 @@ def _replace_confirm_invite_button_with_success_message(channel, timestamp):
         }
     ]
 
-    client = app.bot.slack_web_client()
+    client = bot.slack_web_client()
     response = client.chat_update(
         channel=channel,
         blocks=user_invited_block,
@@ -81,7 +81,7 @@ def invite_user_to_group(oauth_state, access_token):
 
     # Permissions note:
     # This must be a user token (xoxp) from a user who is already in the private channel.
-    client = app.bot.slack_web_client(access_token)
+    client = bot.slack_web_client(access_token)
     response = client.api_call(
         api_method='groups.invite',
         params={'channel': invite_channel_id, 'user': invite_user_id}
