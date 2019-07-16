@@ -10,6 +10,7 @@ route_blueprint = Blueprint('route_blueprint', __name__)
 
 PRIVATE_MESSAGE_NUDGE = 'Please direct message me to get the list or join a channel. :slightly_smiling_face:'
 
+
 def slack_web_client(token=current_app.config['SLACK_BOT_USER_TOKEN']):
     return WebClient(token=token)
 
@@ -26,7 +27,8 @@ def _is_private_message(form_data):
 @route_blueprint.route('/list', methods=['POST'])
 def list_groups():
     form_data = request.form
-    if not _is_request_valid(form_data, current_app.config['SLACK_VERIFICATION_TOKEN'], current_app.config['SLACK_TEAM_ID']):
+    if not _is_request_valid(form_data, current_app.config['SLACK_VERIFICATION_TOKEN'],
+                             current_app.config['SLACK_TEAM_ID']):
         abort(400)
 
     if not _is_private_message(form_data):
@@ -38,7 +40,8 @@ def list_groups():
 @route_blueprint.route('/join', methods=['POST'])
 def join_channel():
     form_data = request.form
-    if not _is_request_valid(form_data, current_app.config['SLACK_VERIFICATION_TOKEN'], current_app.config['SLACK_TEAM_ID']):
+    if not _is_request_valid(form_data, current_app.config['SLACK_VERIFICATION_TOKEN'],
+                             current_app.config['SLACK_TEAM_ID']):
         abort(400)
 
     if not _is_private_message(form_data):

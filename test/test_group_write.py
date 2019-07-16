@@ -1,6 +1,7 @@
 from unittest import mock, TestCase
 from app.groups_write import request_to_join_group, invite_user_to_group, STATE_DIVIDER
 
+
 class RequestToJoinGroupTests(TestCase):
 
     @mock.patch('slack.web.slack_response.SlackResponse')

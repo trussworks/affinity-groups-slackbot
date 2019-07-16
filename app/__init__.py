@@ -1,7 +1,8 @@
 import os
+
 import slack
 from flask import Flask
-import logging
+
 
 def query_team_id(slack_bot_token):
     client = slack.WebClient(token=slack_bot_token)
