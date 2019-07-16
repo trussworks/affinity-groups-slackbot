@@ -1,15 +1,12 @@
-import app.bot
-
 RESPONSE_BASE = 'Here is the list of affinity groups & the commands you can run to join each of them.\n'
 NO_AFFINITY_GROUPS_RESPONSE = 'No affinity groups found. To populate this list, add Affinity Groups Bot to private ' \
     'channels.'
 
 
-def get_groups_list():
+def get_groups_list(client):
     # Permissions note:
     # Bot presence (in a channel) is how we're managing which channels show in the list.
     # Thus, this must be some form of bot token (xoxb). Only groups.list scope is required.
-    client = app.bot.slack_web_client()
     response = client.api_call(
         api_method='conversations.list',
         params={'types': 'private_channel', 'exclude_archived': 'true'}

@@ -1,6 +1,5 @@
-from app.groups_write import request_to_join_group, invite_user_to_group, STATE_DIVIDER
 from unittest import mock, TestCase
-
+from app.groups_write import request_to_join_group, invite_user_to_group, STATE_DIVIDER
 
 class RequestToJoinGroupTests(TestCase):
 
@@ -18,7 +17,7 @@ class RequestToJoinGroupTests(TestCase):
         MockClient.return_value.chat_postMessage.return_value = mock_chat_api_response
 
         # act
-        request_to_join_group(mock_request_data, mock_oauth_uri)
+        request_to_join_group(MockClient(), mock_request_data, mock_oauth_uri)
 
         # assert
         MockClient.return_value.chat_postMessage.assert_called_once()
@@ -29,7 +28,7 @@ class RequestToJoinGroupTests(TestCase):
         MockClient.return_value.chat_postMessage.return_value = {'ok': False}
 
         with self.assertRaises(AssertionError):
-            request_to_join_group(mock_request_data, 'http://example.com')
+            request_to_join_group(MockClient(), mock_request_data, 'http://example.com')
 
     @mock.patch('slack.web.slack_response.SlackResponse')
     @mock.patch('slack.WebClient')
@@ -47,7 +46,7 @@ class RequestToJoinGroupTests(TestCase):
         mock_chat_update_response = MockResponse()
         mock_chat_update_response['ok'] = True
         # act
-        invite_user_msg = request_to_join_group(mock_request_data, mock_oauth_uri)
+        invite_user_msg = request_to_join_group(MockClient(), mock_request_data, mock_oauth_uri)
 
         # assert
         MockClient.return_value.chat_update.assert_called_once()
@@ -70,7 +69,7 @@ class RequestToJoinGroupTests(TestCase):
         MockClient.return_value.chat_update.return_value = {'ok': False}
         # act
         with self.assertRaises(AssertionError):
-            request_to_join_group(mock_request_data, mock_oauth_uri)
+            request_to_join_group(MockClient(), mock_request_data, mock_oauth_uri)
 
 
 class InviteUserToGroupTests(TestCase):
@@ -85,7 +84,7 @@ class InviteUserToGroupTests(TestCase):
         expected_params = {'channel': mock_channel, 'user': mock_user}
 
         # act
-        invite_user_to_group(mock_oauth_state, 'mock oauth user token')
+        invite_user_to_group(MockClient(), mock_oauth_state)
 
         # assert
         MockClient.return_value.api_call.assert_called_once()
@@ -104,7 +103,7 @@ class InviteUserToGroupTests(TestCase):
         MockClient.return_value.chat_update.return_value = {'ok': True}
 
         # act
-        invite_user_to_group(mock_oauth_state, 'mock oauth user token')
+        invite_user_to_group(MockClient(), mock_oauth_state)
 
         # assert
         MockClient.return_value.chat_update.assert_called_once()
@@ -120,6 +119,6 @@ class InviteUserToGroupTests(TestCase):
         MockClient.return_value.chat_update.return_value = {'ok': True}
         expected = '<script>window.close()</script>'
 
-        actual = invite_user_to_group(mock_oauth_state, 'mock oauth user token')
+        actual = invite_user_to_group(MockClient(), mock_oauth_state)
 
         assert expected in actual

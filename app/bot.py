@@ -1,16 +1,17 @@
-import slack
-import app.groups_read as groups_read
-import app.groups_write as groups_write
-from flask import Blueprint, abort, request, current_app
 from urllib.parse import unquote
-import logging
+
+from slack import WebClient
+from flask import Blueprint, abort, request, current_app
+
+from app.groups_read import get_groups_list
+from app.groups_write import request_to_join_group, invite_user_to_group
 
 route_blueprint = Blueprint('route_blueprint', __name__)
 
 PRIVATE_MESSAGE_NUDGE = 'Please direct message me to get the list or join a channel. :slightly_smiling_face:'
 
 def slack_web_client(token=current_app.config['SLACK_BOT_USER_TOKEN']):
-    return slack.WebClient(token=token)
+    return WebClient(token=token)
 
 
 def _is_request_valid(form_data, verification_token, team_id):
@@ -31,7 +32,7 @@ def list_groups():
     if not _is_private_message(form_data):
         return PRIVATE_MESSAGE_NUDGE
 
-    return groups_read.get_groups_list()
+    return get_groups_list(slack_web_client())
 
 
 @route_blueprint.route('/join', methods=['POST'])
@@ -43,7 +44,7 @@ def join_channel():
     if not _is_private_message(form_data):
         return PRIVATE_MESSAGE_NUDGE
 
-    return groups_write.request_to_join_group(form_data, current_app.config['OAUTH_URI'])
+    return request_to_join_group(slack_web_client(), form_data, current_app.config['OAUTH_URI'])
 
 
 @route_blueprint.route('/confirm_invite', methods=['GET', 'POST'])
@@ -61,4 +62,6 @@ def confirm_invite():
     oauth_token = response['access_token']
     raw_state = unquote(request.args['state'])
 
-    return groups_write.invite_user_to_group(raw_state, oauth_token)
+    # Permissions note:
+    # This must be a user token (xoxp) from a user who is already in the private channel.
+    return invite_user_to_group(slack_web_client(oauth_token), raw_state)
