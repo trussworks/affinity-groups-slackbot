@@ -85,7 +85,7 @@ class InviteUserToGroupTests(TestCase):
         expected_params = {'channel': mock_channel, 'user': mock_user}
 
         # act
-        invite_user_to_group(MockClient(), mock_oauth_state)
+        invite_user_to_group(MockClient(), MockClient(), mock_oauth_state)
 
         # assert
         MockClient.return_value.api_call.assert_called_once()
@@ -104,7 +104,7 @@ class InviteUserToGroupTests(TestCase):
         MockClient.return_value.chat_update.return_value = {'ok': True}
 
         # act
-        invite_user_to_group(MockClient(), mock_oauth_state)
+        invite_user_to_group(MockClient(), MockClient(), mock_oauth_state)
 
         # assert
         MockClient.return_value.chat_update.assert_called_once()
@@ -120,6 +120,6 @@ class InviteUserToGroupTests(TestCase):
         MockClient.return_value.chat_update.return_value = {'ok': True}
         expected = '<script>window.close()</script>'
 
-        actual = invite_user_to_group(MockClient(), mock_oauth_state)
+        actual = invite_user_to_group(MockClient(), MockClient(), mock_oauth_state)
 
         assert expected in actual

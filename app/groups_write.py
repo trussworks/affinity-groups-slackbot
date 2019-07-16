@@ -72,16 +72,16 @@ def _replace_confirm_invite_button_with_success_message(client, channel, timesta
     assert response['ok']
 
 
-def invite_user_to_group(client, oauth_state):
+def invite_user_to_group(user_client, bot_client, oauth_state):
     invite_user_id, invite_channel_id, invite_message_ts = oauth_state.split(STATE_DIVIDER)
 
-    response = client.api_call(
+    response = user_client.api_call(
         api_method='groups.invite',
         params={'channel': invite_channel_id, 'user': invite_user_id}
     )
     assert response['ok']
 
-    _replace_confirm_invite_button_with_success_message(client, invite_channel_id, invite_message_ts)
+    _replace_confirm_invite_button_with_success_message(bot_client, invite_channel_id, invite_message_ts)
 
     # OAuth flow has opened a new tab, so we should close it.
     return '<script>window.close()</script>'
