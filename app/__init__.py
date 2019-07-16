@@ -1,7 +1,7 @@
 import os
 import slack
 from flask import Flask
-
+import logging
 
 def query_team_id(slack_bot_token):
     client = slack.WebClient(token=slack_bot_token)
@@ -29,4 +29,8 @@ def create_app(config=None):
     app.config['SLACK_TEAM_ID'] = query_team_id(app.config['SLACK_BOT_USER_TOKEN'])
     app.config['OAUTH_URI'] = oauth_URI('groups:write', app.config['SLACK_CLIENT_ID'], app.config['REDIRECT_URI'])
 
-    return app
+    with app.app_context():
+        from app.bot import route_blueprint
+        app.register_blueprint(route_blueprint)
+
+        return app
