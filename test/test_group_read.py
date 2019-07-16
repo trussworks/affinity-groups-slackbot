@@ -7,8 +7,8 @@ class GetGroupsListTests(TestCase):
 
     @mock.patch('slack.WebClient')
     def test_calls_slack_client_api_method(self, SlackClient):
-        mockApiResponse = {'ok': True, 'channels': []}
-        SlackClient.return_value.api_call.return_value = mockApiResponse
+        mock_api_response = {'ok': True, 'channels': []}
+        SlackClient.return_value.api_call.return_value = mock_api_response
 
         get_groups_list()
 
@@ -16,27 +16,19 @@ class GetGroupsListTests(TestCase):
 
     @mock.patch('slack.WebClient')
     def test_throws_on_unhealthy_api_response(self, SlackClient):
-        mockApiResponse = {'ok': False}
-        true = True
+        mock_api_response = {'ok': False}
 
-        with pytest.raises(Exception) as someExcept:
-            SlackClient.return_value.api_call.return_value = mockApiResponse
+        SlackClient.return_value.api_call.return_value = mock_api_response
 
+        with self.assertRaises(AssertionError):
             get_groups_list()
-
-            SlackClient.return_value.api_call.assert_called_once()
-            assert '????' in str(someExcept)
-
-        # TODO: troubleshoot this test! it's not behaving as expected
-        # bad assert to force above
-        assert mockApiResponse == true
 
     @mock.patch('slack.WebClient')
     def test_when_bot_not_in_any_channels(self, SlackClient):
-        mockApiResponse = {'ok': True, 'channels': []}
+        mock_api_response = {'ok': True, 'channels': []}
         expected = 'No affinity groups found. To populate this list, add Affinity Groups Bot to private channels.'
 
-        SlackClient.return_value.api_call.return_value = mockApiResponse
+        SlackClient.return_value.api_call.return_value = mock_api_response
 
         actual = get_groups_list()
 
@@ -44,35 +36,25 @@ class GetGroupsListTests(TestCase):
 
     @mock.patch('slack.WebClient')
     def test_returns_list_of_groups(self, SlackClient):
-        mockChannelId = 'such id'
-        mockChannel = {'id': mockChannelId, 'name': 'such name', 'topic': {'value': 'such topic '}}
-        mockApiResponse = {'ok': True, 'channels': [mockChannel]}
+        mock_channel_id = 'such id'
+        mock_channel = {'id': mock_channel_id, 'name': 'such name', 'topic': {'value': 'such topic '}}
+        mock_api_response = {'ok': True, 'channels': [mock_channel]}
 
-        SlackClient.return_value.api_call.return_value = mockApiResponse
+        SlackClient.return_value.api_call.return_value = mock_api_response
 
         actual = get_groups_list()
 
-        # TODO: confirm this is the best way to check substring in python
-        assert actual.find(mockChannelId) > -1
+        assert mock_channel_id in actual
 
     @mock.patch('slack.WebClient')
     def test_returns_placeholder_topic_when_none_provided(self, SlackClient):
-        mockChannelId = 'such id'
-        mockChannel = {'id': mockChannelId, 'name': 'such name', 'topic': {'value': ''}}
-        mockApiResponse = {'ok': True, 'channels': [mockChannel]}
-        noTopicPlaceholder = '(No topic provided)'
+        mock_channel_id = 'such id'
+        mock_channel = {'id': mock_channel_id, 'name': 'such name', 'topic': {'value': ''}}
+        mock_api_response = {'ok': True, 'channels': [mock_channel]}
+        no_topic_placeholder = '(No topic provided)'
 
-        SlackClient.return_value.api_call.return_value = mockApiResponse
+        SlackClient.return_value.api_call.return_value = mock_api_response
 
         actual = get_groups_list()
 
-        # TODO: confirm this is the best way to check substring in python
-        assert actual.find(noTopicPlaceholder) > -1
-
-    def test_sanity_check_actual_API_response(self):
-        legit_slack_API_response = False
-        true = True
-
-        # assert doesn't throw
-        # not yet implemented
-        assert legit_slack_API_response == true
+        assert no_topic_placeholder in actual

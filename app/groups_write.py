@@ -1,26 +1,18 @@
 import os
-import slack
+import app.bot
 
-
-client_id = os.environ['SLACK_CLIENT_ID']
-oauth_scope = 'groups:write'
-redirect_uri = os.environ['REDIRECT_URI']
-invite_user_string = 'Someone would like to join this affinity group. Press the confirm button to invite that user.'
-user_invited_string = 'New user invited to the channel!'
-oauth_URI = f'https://slack.com/oauth/authorize?scope={ oauth_scope }'\
-    f'&client_id={ client_id }&redirect_uri={ redirect_uri }'
-state_divider = '@@!!@@!!@@'
-
+INVITE_USER_STRING = 'Someone would like to join this affinity group. Press the confirm button to invite that user.'
+USER_INVITED_STRING = 'New user invited to the channel!'
+STATE_DIVIDER = '@@!!@@!!@@'
 
 # TODO: obfuscate state in some way?
-def _get_invite_user_blocks(user_id, channel_id, message_ts=''):
-    state = f"{ user_id }{ state_divider }{ channel_id }{ state_divider }{ message_ts }"
+def _get_invite_user_blocks(user_id, channel_id, oauth_URI, message_ts=''):
     return [
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": invite_user_string
+                "text": INVITE_USER_STRING
             }
         },
         {
@@ -32,35 +24,37 @@ def _get_invite_user_blocks(user_id, channel_id, message_ts=''):
                         "type": "plain_text",
                         "text": "✅ Confirm invite",
                     },
-                    "url": f"{ oauth_URI }&state={ state }"
+                    "url": f"{ oauth_URI }&state={ STATE_DIVIDER.join([user_id, channel_id, message_ts]) }"
                 }
             ]
         }]
 
 
-def request_to_join_group(request):
+def request_to_join_group(form_data, oauth_URI):
     # Permissions note:
     # This must be some form of bot token (xoxb), since the calling user will not have
     # permissions to post messages to a private channel they're not already part of.
-    client = slack.WebClient(token=os.environ['SLACK_BOT_USER_TOKEN'])
-    group_to_join = request.form['text']
-    user_requesting_to_join = request.form['user_id']
-    invite_user_button = _get_invite_user_blocks(user_requesting_to_join, group_to_join)
+    client = app.bot.slack_web_client()
+    group_to_join = form_data['text']
+    user_requesting_to_join = form_data['user_id']
+    invite_user_button = _get_invite_user_blocks(user_requesting_to_join, group_to_join, oauth_URI)
 
     response = client.chat_postMessage(
         channel=group_to_join,
         blocks=invite_user_button)
+    print(response)
+    print(response['ok'])
     assert response['ok']
 
     message_id = response.data['ts']
     response = client.chat_update(
         channel=group_to_join,
         ts=message_id,
-        blocks=_get_invite_user_blocks(user_requesting_to_join, group_to_join, message_id)
+        blocks=_get_invite_user_blocks(user_requesting_to_join, group_to_join, oauth_URI, message_id)
     )
     assert response['ok']
 
-    return f"Alright! I've posted the following message to the private channel:\n> { invite_user_string }"
+    return f"Alright! I've posted the following message to the private channel:\n> { INVITE_USER_STRING }"
 
 
 def _replace_confirm_invite_button_with_success_message(channel, timestamp):
@@ -69,12 +63,12 @@ def _replace_confirm_invite_button_with_success_message(channel, timestamp):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": user_invited_string
+                "text": USER_INVITED_STRING
             }
         }
     ]
 
-    client = slack.WebClient(token=os.environ['SLACK_BOT_USER_TOKEN'])
+    client = app.bot.slack_web_client()
     response = client.chat_update(
         channel=channel,
         blocks=user_invited_block,
@@ -85,14 +79,11 @@ def _replace_confirm_invite_button_with_success_message(channel, timestamp):
 
 
 def invite_user_to_group(oauth_state, access_token):
-    oauth_state = oauth_state.split(state_divider)
-    invite_user_id = oauth_state[0]
-    invite_channel_id = oauth_state[1]
-    invite_message_ts = oauth_state[2]
+    invite_user_id, invite_channel_id, invite_message_ts = oauth_state.split(STATE_DIVIDER)
 
     # Permissions note:
     # This must be a user token (xoxp) from a user who is already in the private channel.
-    client = slack.WebClient(token=access_token)
+    client = app.bot.slack_web_client(access_token)
     response = client.api_call(
         api_method='groups.invite',
         params={'channel': invite_channel_id, 'user': invite_user_id}
