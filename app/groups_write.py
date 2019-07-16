@@ -1,9 +1,9 @@
-import os
 import app.bot
 
 INVITE_USER_STRING = 'Someone would like to join this affinity group. Press the confirm button to invite that user.'
 USER_INVITED_STRING = 'New user invited to the channel!'
 STATE_DIVIDER = '@@!!@@!!@@'
+
 
 # TODO: obfuscate state in some way?
 def _get_invite_user_blocks(user_id, channel_id, oauth_URI, message_ts=''):
@@ -42,8 +42,6 @@ def request_to_join_group(form_data, oauth_URI):
     response = client.chat_postMessage(
         channel=group_to_join,
         blocks=invite_user_button)
-    print(response)
-    print(response['ok'])
     assert response['ok']
 
     message_id = response.data['ts']

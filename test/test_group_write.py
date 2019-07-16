@@ -1,6 +1,6 @@
-import flask
 from app.groups_write import request_to_join_group, invite_user_to_group, STATE_DIVIDER
 from unittest import mock, TestCase
+
 
 class RequestToJoinGroupTests(TestCase):
 
@@ -52,7 +52,8 @@ class RequestToJoinGroupTests(TestCase):
         # assert
         MockClient.return_value.chat_update.assert_called_once()
         assert invite_user_msg == ("Alright! I've posted the following message to the private channel:\n> "
-            "Someone would like to join this affinity group. Press the confirm button to invite that user.")
+                                   "Someone would like to join this affinity group. Press the confirm button "
+                                   "to invite that user.")
 
     @mock.patch('slack.web.slack_response.SlackResponse')
     @mock.patch('slack.WebClient')
@@ -70,6 +71,7 @@ class RequestToJoinGroupTests(TestCase):
         # act
         with self.assertRaises(AssertionError):
             request_to_join_group(mock_request_data, mock_oauth_uri)
+
 
 class InviteUserToGroupTests(TestCase):
 

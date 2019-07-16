@@ -1,9 +1,9 @@
-import os
 import app.bot
 
 RESPONSE_BASE = 'Here is the list of affinity groups & the commands you can run to join each of them.\n'
 NO_AFFINITY_GROUPS_RESPONSE = 'No affinity groups found. To populate this list, add Affinity Groups Bot to private ' \
     'channels.'
+
 
 def get_groups_list():
     # Permissions note:

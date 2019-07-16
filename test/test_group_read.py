@@ -1,4 +1,3 @@
-import pytest
 from app.groups_read import get_groups_list
 from unittest import mock, TestCase
 
