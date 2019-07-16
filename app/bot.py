@@ -67,4 +67,4 @@ def confirm_invite():
 
     # Permissions note:
     # This must be a user token (xoxp) from a user who is already in the private channel.
-    return invite_user_to_group(slack_web_client(oauth_token), raw_state)
+    return invite_user_to_group(slack_web_client(oauth_token), slack_web_client, raw_state)
