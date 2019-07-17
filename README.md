@@ -4,7 +4,6 @@ We made this slackbot to allow folks to opt into private affinity groups within 
 
 [![CircleCI](https://circleci.com/gh/trussworks/affinity-groups-slackbot.svg?style=svg&circle-token=7145d7dd160c1a661facf0e7709bd733dbad76d0)](https://circleci.com/gh/trussworks/affinity-groups-slackbot)
 
-
 ## dev environment
 
 To work with the slackbot & test locally, you'll need:
@@ -68,13 +67,9 @@ To stand up an instance of this slackbot for your own workspace, you'll also nee
     - `SLACK_SIGNING_SECRET`
     - `SLACK_VERIFICATION_TOKEN`
 
-    You may need to view source in your Slack workspace to get this one:
-
-    - `SLACK_TEAM_ID`
-
     And from Heroku itself:
 
-    - `REDIRECT_URI` (your app URL)
+    - `REDIRECT_URI` (your app URL + /confirm_invite)
 
 3. In your Slack app's features > slash commands, you'll need to add:
 
