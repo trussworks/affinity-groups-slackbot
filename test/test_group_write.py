@@ -93,7 +93,6 @@ class InviteUserToGroupTests(TestCase):
             api_method='groups.invite',
             params=expected_params)
 
-    # TODO: confirm timestamp is used to update correct message?
     @mock.patch('slack.WebClient')
     def test_updates_original_private_channel_message_with_success_message(self, MockClient):
         # arrange
