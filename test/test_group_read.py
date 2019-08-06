@@ -34,15 +34,15 @@ class GetGroupsListTests(TestCase):
 
     @mock.patch('slack.WebClient')
     def test_returns_list_of_groups(self, MockClient):
-        mock_channel_id = 'such id'
-        mock_channel = {'id': mock_channel_id, 'name': 'such name', 'topic': {'value': 'such topic '}}
+        mock_channel_name = 'such name'
+        mock_channel = {'id': 'such id', 'name': mock_channel_name, 'topic': {'value': 'such topic '}}
         mock_api_response = {'ok': True, 'channels': [mock_channel]}
 
         MockClient.return_value.api_call.return_value = mock_api_response
 
         actual = get_groups_list(MockClient())
 
-        assert mock_channel_id in actual
+        assert mock_channel_name in actual
 
     @mock.patch('slack.WebClient')
     def test_returns_placeholder_topic_when_none_provided(self, MockClient):
