@@ -1,15 +1,44 @@
 from unittest import mock, TestCase
-from app.groups_write import request_to_join_group, invite_user_to_group, STATE_DIVIDER
+from app.groups_write import request_to_join_group, invite_user_to_group, UNKNOWN_CHANNEL_ERROR, STATE_DIVIDER
 
 
 class RequestToJoinGroupTests(TestCase):
 
     @mock.patch('slack.web.slack_response.SlackResponse')
     @mock.patch('slack.WebClient')
-    def test_posts_message_to_requested_private_channel(self, MockClient, MockResponse):
+    def test_unrecognized_channel_name(self, MockClient, MockResponse):
         # arrange
-        mock_request_data = {'text': 'mock channel id', 'user_id': 'request to join user id'}
+        mock_request_data = {'text': 'mock channel name', 'user_id': 'request to join user id'}
         mock_oauth_uri = 'http://example.com'
+        mock_channels_response = MockResponse()
+        mock_channels_data = {
+            'ok': True,
+            'channels': [{
+                'id': 'another channel id',
+                'name': 'another channel name',
+                'topic': {'value': 'another topic'}
+                }
+            ]
+        }
+
+        mock_channels_response.data.__getitem__.side_effect = mock_channels_data.__getitem__
+        MockClient.return_value.api_call.return_value = mock_channels_response
+
+        # act
+        actual = request_to_join_group(MockClient(), mock_request_data, mock_oauth_uri)
+
+        # assert
+        assert actual == UNKNOWN_CHANNEL_ERROR
+
+    @mock.patch('slack.web.slack_response.SlackResponse')
+    @mock.patch('slack.WebClient')
+    @mock.patch('app.groups_write._lookup_channel_id_from_name')
+    def test_posts_message_to_requested_private_channel(self, mock_lookup_id, MockClient, MockResponse):
+        # arrange
+        mock_request_data = {'text': 'mock channel name', 'user_id': 'request to join user id'}
+        mock_oauth_uri = 'http://example.com'
+
+        mock_lookup_id.return_value = 'mock channel id'
 
         mock_chat_api_response = MockResponse()
         mock_chat_api_response['ok'] = True
@@ -24,19 +53,25 @@ class RequestToJoinGroupTests(TestCase):
         MockClient.return_value.chat_postMessage.assert_called_once()
 
     @mock.patch('slack.WebClient')
-    def test_throws_on_unhealthy_post_message_api_response(self, MockClient):
-        mock_request_data = {'text': 'mock channel id', 'user_id': 'request to join user id'}
+    @mock.patch('app.groups_write._lookup_channel_id_from_name')
+    def test_throws_on_unhealthy_post_message_api_response(self, mock_lookup_id, MockClient):
+        mock_request_data = {'text': 'mock channel name', 'user_id': 'request to join user id'}
         MockClient.return_value.chat_postMessage.return_value = {'ok': False}
+
+        mock_lookup_id.return_value = 'mock channel id'
 
         with self.assertRaises(AssertionError):
             request_to_join_group(MockClient(), mock_request_data, 'http://example.com')
 
     @mock.patch('slack.web.slack_response.SlackResponse')
     @mock.patch('slack.WebClient')
-    def test_updates_private_channel_message_with_timestamp_data(self, MockClient, MockResponse):
+    @mock.patch('app.groups_write._lookup_channel_id_from_name')
+    def test_updates_private_channel_message_with_timestamp_data(self, mock_lookup_id, MockClient, MockResponse):
         # arrange
-        mock_request_data = {'text': 'mock channel id', 'user_id': 'request to join user id'}
+        mock_request_data = {'text': 'mock channel name', 'user_id': 'request to join user id'}
         mock_oauth_uri = 'http://example.com'
+
+        mock_lookup_id.return_value = 'mock channel id'
 
         mock_chat_post_msg_response = MockResponse()
         mock_chat_post_msg_response['ok'] = True
@@ -57,9 +92,12 @@ class RequestToJoinGroupTests(TestCase):
 
     @mock.patch('slack.web.slack_response.SlackResponse')
     @mock.patch('slack.WebClient')
-    def test_throws_on_unhealthy_update_message_api_response(self, MockClient, MockResponse):
+    @mock.patch('app.groups_write._lookup_channel_id_from_name')
+    def test_throws_on_unhealthy_update_message_api_response(self, mock_lookup_id, MockClient, MockResponse):
         mock_request_data = {'text': 'mock channel id', 'user_id': 'request to join user id'}
         mock_oauth_uri = 'http://example.com'
+
+        mock_lookup_id.return_value = 'mock channel id'
 
         mock_chat_post_msg_response = MockResponse()
         mock_chat_post_msg_response['ok'] = True

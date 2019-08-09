@@ -3,14 +3,22 @@ NO_AFFINITY_GROUPS_RESPONSE = 'No affinity groups found. To populate this list, 
     'channels.'
 
 
+def find_private_channels(client):
+    # Permissions note:
+    # Bot presence (in a channel) is how we're managing which channels show in the list.
+    # Thus, this must be some form of bot token (xoxb). Only groups.list scope is required.
+    return client.api_call(
+        api_method='conversations.list',
+        params={'types': 'private_channel', 'exclude_archived': 'true'}
+    )
+
+
 def get_groups_list(client):
     # Permissions note:
     # Bot presence (in a channel) is how we're managing which channels show in the list.
     # Thus, this must be some form of bot token (xoxb). Only groups.list scope is required.
-    response = client.api_call(
-        api_method='conversations.list',
-        params={'types': 'private_channel', 'exclude_archived': 'true'}
-    )
+    response = find_private_channels(client)
+
     assert response['ok']
 
     return _build_list_response(response)
@@ -34,6 +42,6 @@ def _build_list_response(slack_response):
     for c in channels:
         response += f":slack: *{ c['name'] }* --"
         response += '(No topic provided)' if c['topic'] == '' else c['topic']
-        response += f" -- `/join-group { c['id'] }`\n"
+        response += f" -- `/join-group { c['name'] }`\n"
 
     return response

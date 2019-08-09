@@ -1,3 +1,7 @@
+from app.groups_read import find_private_channels
+
+UNKNOWN_CHANNEL_ERROR = 'Sorry there is no channel to join with that name. Available channel names should appear '\
+                       'after running the `/list-groups` command'
 INVITE_USER_STRING = 'Someone would like to join this affinity group. Press the confirm button to invite that user.'
 USER_INVITED_STRING = 'New user invited to the channel!'
 STATE_DIVIDER = '@@!!@@!!@@'
@@ -28,8 +32,18 @@ def _get_invite_user_blocks(user_id, channel_id, oauth_URI, message_ts=''):
         }]
 
 
+def _lookup_channel_id_from_name(client, channel_name):
+    for channel in find_private_channels(client).get('channels'):
+        if channel['name'] == channel_name:
+            return channel['id']
+
+
 def request_to_join_group(client, form_data, oauth_URI):
-    group_to_join = form_data['text']
+    group_to_join = _lookup_channel_id_from_name(client, form_data['text'])
+
+    if not group_to_join:
+        return UNKNOWN_CHANNEL_ERROR
+
     user_requesting_to_join = form_data['user_id']
     invite_user_button = _get_invite_user_blocks(user_requesting_to_join, group_to_join, oauth_URI)
 
