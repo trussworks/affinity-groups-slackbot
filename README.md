@@ -76,7 +76,7 @@ To stand up an instance of this slackbot for your own workspace, you'll also nee
     command | description | usage hint | URI
     --------| ------------|------------|----
     `/list-groups` | get the list of affinity groups in this slack workspace | | `<your-heroku-app>/list`
-    `/join-group` | add yourself to the specified affinity group (get the ID with /list-groups) | `<channel-id>` | `<your-heroku-app>/join`
+    `/join-group` | add yourself to the specified affinity group (get the ID with /list-groups) | `<channel-name>` | `<your-heroku-app>/join`
 
 4. If you missed this above, set your Heroku instance as an allowed redirect URI for your Slack app. (go to: features > oauth & permissions)
 
