@@ -87,8 +87,8 @@ class RequestToJoinGroupTests(TestCase):
         # assert
         MockClient.return_value.chat_update.assert_called_once()
         assert invite_user_msg == ("Alright! I've posted the following message to the private channel:\n> "
-                                   "Someone would like to join this affinity group. Press the confirm button "
-                                   "to invite that user.")
+                                   "User <@request to join user id> would like to join this affinity group. "
+                                   "Press the confirm button to invite that user.")
 
     @mock.patch('slack.web.slack_response.SlackResponse')
     @mock.patch('slack.WebClient')
