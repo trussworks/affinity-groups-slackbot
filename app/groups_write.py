@@ -1,7 +1,9 @@
 from app.groups_read import find_private_channels
 
-UNKNOWN_CHANNEL_ERROR = 'Sorry there is no channel to join with that name. Available channel names should appear '\
-                       'after running the `/list-groups` command'
+UNKNOWN_CHANNEL_ERROR = (
+    'Sorry there is no channel to join with that name. Available channel names should appear '
+    'after running the `/list-groups` command'
+)
 INVITE_USER_STRING = 'Someone would like to join this affinity group. Press the confirm button to invite that user.'
 USER_INVITED_STRING = 'New user invited to the channel!'
 STATE_DIVIDER = '@@!!@@!!@@'
