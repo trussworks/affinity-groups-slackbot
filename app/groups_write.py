@@ -53,7 +53,8 @@ def request_to_join_group(client, form_data, oauth_URI):
     response = client.chat_postMessage(
         channel=group_to_join,
         blocks=invite_user_button)
-    assert response['ok']
+    if not response['ok']:
+        raise AssertionError
 
     message_id = response.data['ts']
     response = client.chat_update(
@@ -61,7 +62,8 @@ def request_to_join_group(client, form_data, oauth_URI):
         ts=message_id,
         blocks=_get_invite_user_blocks(user_requesting_to_join, group_to_join, oauth_URI, message_id)
     )
-    assert response['ok']
+    if not response['ok']:
+        raise AssertionError
 
     return f"Alright! I've posted the following message to the private channel:\n> { INVITE_USER_STRING }"
 
@@ -83,7 +85,8 @@ def _replace_confirm_invite_button_with_success_message(client, channel, timesta
         ts=timestamp,
         as_user=True,
     )
-    assert response['ok']
+    if not response['ok']:
+        raise AssertionError
 
 
 def invite_user_to_group(user_client, bot_client, oauth_state):
@@ -93,7 +96,8 @@ def invite_user_to_group(user_client, bot_client, oauth_state):
         api_method='groups.invite',
         params={'channel': invite_channel_id, 'user': invite_user_id}
     )
-    assert response['ok']
+    if not response['ok']:
+        raise AssertionError
 
     _replace_confirm_invite_button_with_success_message(bot_client, invite_channel_id, invite_message_ts)
 

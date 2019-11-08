@@ -9,7 +9,8 @@ def query_team_id(slack_bot_token):
     response = client.api_call(
         api_method='team.info'
     )
-    assert response['ok']
+    if not response['ok']:
+        raise AssertionError
 
     return response['team']['id']
 

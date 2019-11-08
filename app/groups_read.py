@@ -19,7 +19,8 @@ def get_groups_list(client):
     # Thus, this must be some form of bot token (xoxb). Only groups.list scope is required.
     response = find_private_channels(client)
 
-    assert response['ok']
+    if not response['ok']:
+        raise AssertionError
 
     return _build_list_response(response)
 
