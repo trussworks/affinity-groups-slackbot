@@ -4,9 +4,12 @@ UNKNOWN_CHANNEL_ERROR = (
     'Sorry there is no channel to join with that name. Available channel names should appear '
     'after running the `/list-groups` command'
 )
-INVITE_USER_STRING = 'Someone would like to join this affinity group. Press the confirm button to invite that user.'
 USER_INVITED_STRING = 'New user invited to the channel!'
 STATE_DIVIDER = '@@!!@@!!@@'
+
+
+def _get_invite_string_for_user(user_id):
+    return f'User <@{user_id}> would like to join this affinity group. Press the confirm button to invite that user.'
 
 
 # TODO: obfuscate state in some way?
@@ -16,7 +19,7 @@ def _get_invite_user_blocks(user_id, channel_id, oauth_URI, message_ts=''):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": INVITE_USER_STRING
+                "text": _get_invite_string_for_user(user_id)
             }
         },
         {
@@ -67,7 +70,10 @@ def request_to_join_group(client, form_data, oauth_URI):
     if not response['ok']:
         raise AssertionError
 
-    return f"Alright! I've posted the following message to the private channel:\n> { INVITE_USER_STRING }"
+    return (
+        "Alright! I've posted the following message to the private channel:\n"
+        f"> { _get_invite_string_for_user(user_requesting_to_join) }"
+    )
 
 
 def _replace_confirm_invite_button_with_success_message(client, channel, timestamp):

@@ -1,6 +1,6 @@
 # affinity groups slackbot
 
-We made this slackbot to allow folks to opt into private affinity groups within a Slack workspace without having to out themselves or forcing a public point of contact for the group to out themselves.
+We made this slackbot to allow folks to apply for admission into private affinity groups within a Slack workspace without forcing a public point of contact for the group to out themselves.
 
 [![CircleCI](https://circleci.com/gh/trussworks/affinity-groups-slackbot.svg?style=svg&circle-token=7145d7dd160c1a661facf0e7709bd733dbad76d0)](https://circleci.com/gh/trussworks/affinity-groups-slackbot)
 
