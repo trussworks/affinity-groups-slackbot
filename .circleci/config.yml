@@ -1,26 +1,31 @@
-version: 2.1
 jobs:
   lint_and_test_code:
     docker:
-      - image: trussworks/circleci:29ab89fdada1f85c5d8fb685a2c71660f0c5f60c
+    - auth:
+        password: $DOCKER_PASSWORD
+        username: $DOCKER_USERNAME
+      image: trussworks/circleci:29ab89fdada1f85c5d8fb685a2c71660f0c5f60c
     steps:
-      - checkout
-      - run:
-          name: Run pre-commit hooks on all files
-          command: pre-commit run --all-files
-      - run:
-          name: Install dev dependencies
-          command: pipenv sync --dev
-      - run:
-          name: Run Python tests
-          command: pipenv run pytest
-      - store_test_results:
-          path: test-results
-      - store_artifacts:
-          path: test-results
-          destination: tr1
+    - checkout
+    - run:
+        command: pre-commit run --all-files
+        name: Run pre-commit hooks on all files
+    - run:
+        command: pipenv sync --dev
+        name: Install dev dependencies
+    - run:
+        command: pipenv run pytest
+        name: Run Python tests
+    - store_test_results:
+        path: test-results
+    - store_artifacts:
+        destination: tr1
+        path: test-results
+version: 2.1
 workflows:
-  version: 2.1
   pipeline:
     jobs:
-      - lint_and_test_code
+    - lint_and_test_code:
+        context:
+        - org-global
+  version: 2.1
