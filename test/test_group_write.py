@@ -120,7 +120,7 @@ class InviteUserToGroupTests(TestCase):
         mock_user = 'mock user'
         mock_timestamp = 'mock timestamp'
         mock_oauth_state = STATE_DIVIDER.join([mock_user, mock_channel, mock_timestamp])
-        expected_params = {'channel': mock_channel, 'user': mock_user}
+        expected_params = {'channel': mock_channel, 'users': mock_user}
 
         # act
         invite_user_to_group(MockClient(), MockClient(), mock_oauth_state)
@@ -128,7 +128,7 @@ class InviteUserToGroupTests(TestCase):
         # assert
         MockClient.return_value.api_call.assert_called_once()
         MockClient.return_value.api_call.assert_called_once_with(
-            api_method='groups.invite',
+            api_method='conversations.invite',
             params=expected_params)
 
     @mock.patch('slack.WebClient')
