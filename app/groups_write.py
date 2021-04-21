@@ -101,8 +101,8 @@ def invite_user_to_group(user_client, bot_client, oauth_state):
     invite_user_id, invite_channel_id, invite_message_ts = oauth_state.split(STATE_DIVIDER)
 
     response = user_client.api_call(
-        api_method='groups.invite',
-        params={'channel': invite_channel_id, 'user': invite_user_id}
+        api_method='conversations.invite',
+        params={'channel': invite_channel_id, 'users': invite_user_id}
     )
     if not response['ok']:
         raise AssertionError
