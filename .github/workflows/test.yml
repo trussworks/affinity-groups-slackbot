@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  asdf_setup:
+  python_setup:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -15,7 +15,6 @@ jobs:
 
       - name: Poetry Install
         uses: actions/setup-python@v4
+      - run: pip install poetry
       - run: poetry install
-
-      - name: Run Tests
-        run: poetry run pytest
+      - run: poetry run pytest
