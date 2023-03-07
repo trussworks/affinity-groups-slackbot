@@ -1,27 +1,54 @@
+---
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.1.0
+  - repo: meta
     hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: end-of-file-fixer
       - id: trailing-whitespace
-        name: Trim trailing whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-docstring-first
+      - id: check-toml
+      - id: check-yaml
 
-      - id: requirements-txt-fixer
-        name: Sort requirements.txt
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.9.0
+    hooks:
+      - id: python-check-blanket-noqa
+      - id: python-check-blanket-type-ignore
+      - id: python-check-mock-methods
 
-      - id: debug-statements
-        name: No illegal import or breakpoint calls
+  - repo: local
+    hooks:
+      - id: pyproject.toml
+        name: validate pyproject.toml
+        language: system
+        entry: poetry check
+        files: 'pyproject\.toml'
+        pass_filenames: false
+
+      - id: isort
+        name: isort
+        language: system
+        entry: poetry run isort
+        types: [python]
+
+      - id: black
+        name: black
+        language: system
+        entry: poetry run black
+        types: [python]
 
       - id: flake8
-        name: Lint python files (for config, see .flake8)
-
-      - id: check-merge-conflict
-        name: Files should not have merge conflict strings
-
-      - id: detect-private-key
-        name: No private keys in source control
-
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.5.0
-    hooks:
-      - id: markdownlint
-        name: Linting markdown files (for config, see .markdownlint.json)
+        name: flake8
+        language: system
+        entry: poetry run flake8
+        types: [python]
