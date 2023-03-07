@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "affinity-groups-slackbot"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["TrussWorks, Inc. <why@truss.works>"]
 version = "0.1.0"
 readme = "README.md"
 
