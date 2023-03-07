@@ -1,0 +1,37 @@
+{
+    "extends": [
+        "config:base"
+    ],
+    "lockFileMaintenance": {
+        "enabled": true,
+        "automerge": true
+    },
+    "labels": [
+        "dependencies"
+    ],
+    "packageRules": [
+        {
+            "automerge": true,
+            "matchUpdateTypes": [
+                "patch",
+                "pin",
+                "digest"
+            ]
+        },
+        {
+            "groupName": "dependencies",
+            "matchUpdateTypes": [
+                "minor"
+            ]
+        }
+    ],
+    "pre-commit": {
+        "enabled": true
+    },
+    "schedule": [
+        "every weekday",
+        "after 9am and before 5pm"
+    ],
+    "separateMinorPatch": true,
+    "timezone": "America/Los_Angeles"
+}
