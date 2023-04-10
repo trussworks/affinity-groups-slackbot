@@ -2,14 +2,13 @@
 
 We made this slackbot to allow folks to apply for admission into private affinity groups within a Slack workspace without forcing a public point of contact for the group to out themselves.
 
-[![CircleCI](https://circleci.com/gh/trussworks/affinity-groups-slackbot.svg?style=svg&circle-token=7145d7dd160c1a661facf0e7709bd733dbad76d0)](https://circleci.com/gh/trussworks/affinity-groups-slackbot)
 
 ## dev environment
 
 To work with the slackbot & test locally, you'll need:
 
 - Python 3.6 or higher
-  - Pipenv
+  - Poetryv
 - Ngrok, Heroku, or some other way to expose the app to the web
   - Ngrok strongly recommended for local development
 - Some environment variables as described in installation below
@@ -18,14 +17,14 @@ To work with the slackbot & test locally, you'll need:
 
 ### working with the code
 
-Install dependencies with command `pipenv install` and keep them up-to-date with `pipenv sync`.
+Install dependencies with command `poetry install` and keep them up-to-date with `poetry lock`.
 
-To spin up a server locally, use command `flask run`. If you have `ngrok` installed, you can test that local server against a live Slack workspace. Note: You will need to reconfigure the Slack integration's slash commands & allowed oauth redirect URIs every time you generate a new Ngrok proxy. (See more detailed instructions for that below.)
+To spin up a server locally, use command `poetry run flask run`. If you have `ngrok` installed, you can test that local server against a live Slack workspace. Note: You will need to reconfigure the Slack integration's slash commands & allowed oauth redirect URIs every time you generate a new Ngrok proxy. (See more detailed instructions for that below.)
 
 
 ### running the tests
 
-You can run the tests from project root with command `pipenv run pytest`.
+You can run the tests from project root with command `poetry run pytest`.
 
 
 ### deploying code to production
@@ -37,7 +36,7 @@ If you're forking this code as part of installing this app to your Slack workspa
 If you plan to install this app unchanged, feel free to wire your Heroku backend the same way.
 
 
-## prod installation instructions
+## prod heroku installation instructions
 
 To stand up an instance of this slackbot for your own workspace, you'll also need:
 

@@ -78,3 +78,7 @@ def confirm_invite():
     return invite_user_to_group(
         slack_web_client(oauth_token), slack_web_client(), raw_state
     )
+
+@route_blueprint.route("/health_check", methods=["GET"])
+def health_check():
+    return "it chill"
