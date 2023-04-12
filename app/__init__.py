@@ -1,23 +1,6 @@
 import os
 
-import slack
-from flask import Flask
 
-
-def query_team_id(slack_bot_token):
-    client = slack.WebClient(token=slack_bot_token)
-    response = client.api_call(api_method="team.info")
-    if not response["ok"]:
-        raise AssertionError
-
-    return response["team"]["id"]
-
-
-def oauth_URI(scope, client_id, redirect_uri):
-    return (
-        f"https://slack.com/oauth/authorize?scope={ scope }"
-        f"&client_id={ client_id }&redirect_uri={ redirect_uri }"
-    )
 
 
 def create_app(config=None):
@@ -32,10 +15,3 @@ def create_app(config=None):
     app.config["OAUTH_URI"] = oauth_URI(
         "groups:write", app.config["SLACK_CLIENT_ID"], app.config["REDIRECT_URI"]
     )
-
-    with app.app_context():
-        from app.bot import route_blueprint
-
-        app.register_blueprint(route_blueprint)
-
-        return app
