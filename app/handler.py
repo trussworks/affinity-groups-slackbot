@@ -1,5 +1,8 @@
-import slack
+from slack import WebClient
+
 import logging
+import time
+import json
 
 logger = logging.getLogger() 
 logger_level = logging.INFO  
@@ -27,13 +30,14 @@ def oauth_URI(scope, client_id, redirect_uri):
         f"&client_id={ client_id }&redirect_uri={ redirect_uri }"
     )
 
-def lambda_handler(event, context):
+def handler(event, context):
       start_t = time.time()
       log("Received event", dict(event=event))
-      log("Received context", dict(context=context))
 
       # parse the event and see which slash command was called
       # redirect to the correct method in bot.py
+
+      client = WebClient(token='token')
       
       response = dict()
       response['duration'] = "{} ms".format(
