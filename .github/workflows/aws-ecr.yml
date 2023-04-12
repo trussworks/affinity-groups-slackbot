@@ -57,3 +57,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD=${{ github.sha }}
+          provenance: false
