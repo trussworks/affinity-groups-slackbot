@@ -30,6 +30,7 @@ def oauth_URI(scope, client_id, redirect_uri):
         f"&client_id={ client_id }&redirect_uri={ redirect_uri }"
     )
 
+
 def handler(event, context):
       start_t = time.time()
       log("Received event", dict(event=event))
