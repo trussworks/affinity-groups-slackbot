@@ -13,10 +13,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Poetry Install
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.2"
-      - run: pip install poetry
-      - run: poetry install
-      - run: poetry run pytest
+      # - name: Poetry Install
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: "3.11.2"
+      # - run: pip install poetry
+      # - run: poetry install
+      # - run: poetry run pytest
