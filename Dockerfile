@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.9 as python-build-stage
+FROM python:3.9-slim-bullseye as python-build-stage
 WORKDIR /src
 
 RUN apt-get update && apt-get upgrade -y \
@@ -11,5 +11,5 @@ RUN pip install --isolated --no-cache-dir --no-input poetry \
     && poetry config virtualenvs.create false \
     && poetry install --no-interaction --without=dev
 
-FROM python-build-stage as python-run-stage
+FROM public.ecr.aws/lambda/python:3.9 as python-run-stage
 CMD [ "app.handler" ]
