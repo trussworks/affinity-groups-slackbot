@@ -19,7 +19,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # tag=v1
         with:
-          aws-region: us-east-1
+          aws-region: us-west-2
           role-to-assume: ${{ secrets.GHA_ECR_ROLE_ASSUMPTION }}
 
       - name: Login to Amazon ECR
