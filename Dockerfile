@@ -12,4 +12,7 @@ RUN pip install --isolated --no-cache-dir --no-input poetry \
     && poetry install --no-interaction --without=dev
 
 FROM public.ecr.aws/lambda/python:3.9 as python-run-stage
+COPY --from=python-build-stage /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+ENV PYTHONPATH=/usr/local/lib/python3.9/site-packages
+
 CMD [ "app.handler" ]
