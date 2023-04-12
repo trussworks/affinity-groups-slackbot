@@ -31,6 +31,25 @@ jobs:
         with:
           registry: ${{ steps.login-ecr.outputs.registry }}
 
+      - name: Construct image URI
+        id: construct-image-uri
+        env:
+          GIT_BRANCH: ${{ github.ref_name }}
+          GIT_COMMIT: ${{ github.sha }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          DEPLOY_ENV: ${{ inputs.deploy-env }}
+        shell: bash
+        run: |
+          BRANCH_PREFIX="$GIT_BRANCH"
+          # use a generic prefix for all non-main branches
+          if [[ "$BRANCH_PREFIX" != "main" ]]; then
+            BRANCH_PREFIX="branch"
+          fi
+          BUILD_TIME=$(date '+%Y%m%d%H%M%S')
+          IMAGE_TAG="${BRANCH_PREFIX}-${GIT_COMMIT}-${BUILD_TIME}"
+          IMAGE_URI="${ECR_REGISTRY}/affinity-groups-slackbot:${IMAGE_TAG}"
+          echo "image-uri=$IMAGE_URI" >> $GITHUB_OUTPUT
+
       - uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6 # tag=v2
         id: buildx
         with:
@@ -41,7 +60,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+          tags: ${{ steps.construct-image-uri.outputs.image-uri }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD=${{ github.sha }}
