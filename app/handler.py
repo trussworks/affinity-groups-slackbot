@@ -34,9 +34,11 @@ def oauth_URI(scope, client_id, redirect_uri):
 
 def handler(event, context):
       start_t = time.time()
-      body = b64decode(event["body"])
-      body_dict = dict(body.split("=") for keys in
-                       body.split("&"))
+      body = b64decode(event["body"]).decode('utf-8')
+      print(body)
+      pairs = body.split("&")
+      body_dict = dict(pair.split("=") for pair in
+                       pairs)
       print(body_dict)
 
     #   body_bytes = body.encode('ascii')
