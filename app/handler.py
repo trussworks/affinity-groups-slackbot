@@ -48,9 +48,6 @@ def slack_web_client(token=os.environ["SLACK_BOT_USER_TOKEN"]):
     return WebClient(token=token)
 
 
-def join_channel():
-
-    
 def handler(event, _):
     print(event)
     body = decode_body(event["body"])
