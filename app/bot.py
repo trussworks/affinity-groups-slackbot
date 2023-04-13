@@ -2,8 +2,8 @@ from urllib.parse import unquote
 
 from slack import WebClient
 
-from app.groups_read import get_groups_list
-from app.groups_write import invite_user_to_group, request_to_join_group
+from groups_read import get_groups_list
+from groups_write import invite_user_to_group, request_to_join_group
 
 
 def slack_web_client(token=current_app.config["SLACK_BOT_USER_TOKEN"]):
