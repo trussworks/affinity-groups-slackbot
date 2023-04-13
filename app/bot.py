@@ -6,20 +6,8 @@ from app.groups_read import get_groups_list
 from app.groups_write import invite_user_to_group, request_to_join_group
 
 
-PRIVATE_MESSAGE_NUDGE = "Please direct message me to get the list or join a channel. :slightly_smiling_face:"
-
-
 def slack_web_client(token=current_app.config["SLACK_BOT_USER_TOKEN"]):
     return WebClient(token=token)
-
-
-def _is_request_valid(form_data, verification_token, team_id):
-    # TODO: fix this to use request signing rather than deprecated verification token
-    return form_data["token"] == verification_token and form_data["team_id"] == team_id
-
-
-def _is_private_message(form_data):
-    return form_data["channel_name"] == "directmessage"
 
 
 def list_groups():

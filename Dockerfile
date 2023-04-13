@@ -18,6 +18,6 @@ FROM public.ecr.aws/lambda/python:3.9 as python-run-stage
 COPY --from=python-build-stage /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 ENV PYTHONPATH=/usr/local/lib/python3.9/site-packages
 
-COPY app/handler.py ${LAMBDA_TASK_ROOT}
-
+COPY app ${LAMBDA_TASK_ROOT}
+WORKDIR /app
 CMD [ "handler.handler" ]

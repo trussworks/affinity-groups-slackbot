@@ -1,23 +1,23 @@
 from slack import WebClient
 from base64 import b64decode
 
-import logging
+from app.groups_read import get_groups_list
+
 import time
-import json
+import os
 
-logger = logging.getLogger() 
-logger_level = logging.INFO  
-logger.setLevel(logger_level)
+PRIVATE_MESSAGE_NUDGE = "Please direct message me to get the list or join a channel. :slightly_smiling_face:"          
 
-# structured logging                     
-def log(msg="", data=None, level='info'):
-    j = json.dumps(data) if data else "" 
-    s = (msg + " " + j).strip()          
-    getattr(logger, level)(s)           
+def _is_request_valid(token, team_id):
+    return token == os.environ["SLACK_VERIFICATION_TOKEN"] and team_id == os.environ["SLACK_TEAM_ID"]
+
+
+def _is_private_message(channel_name):
+    return channel_name == "directmessage"
 
 
 def query_team_id(slack_bot_token):
-    client = slack.WebClient(token=slack_bot_token)
+    client = WebClient(token=slack_bot_token)
     response = client.api_call(api_method="team.info")
     if not response["ok"]:
         raise AssertionError
@@ -32,21 +32,35 @@ def oauth_URI(scope, client_id, redirect_uri):
     )
 
 def decode_body(body):
-    decoded_body = b64decode(body).decode('ascii')
+    decoded_body = b64decode(body).decode('utf-8')
     pairs = decoded_body.split("&")
     return dict(pair.split("=") for pair in
                     pairs)
+
+
+def slack_web_client(token=os.environ["SLACK_BOT_USER_TOKEN"]):
+    return WebClient(token=token)
+
+
+def list_groups(channel_name):
+    if not _is_private_message(channel_name):
+        return PRIVATE_MESSAGE_NUDGE
+
+    return get_groups_list(slack_web_client())
       
 
 def handler(event, context):
     start_t = time.time()
+    print(event)
     body = decode_body(event["body"])
-    print(body)
-    # command = body.get("command")
-    # # command starts with %2 for some reason
-    # sanitized_command = 
-
-    client = WebClient(token='token')
+    
+    command = body.get("command")
+    
+    if not _is_request_valid(body.get("token"), body.get("team_id")):
+        return 'this is not a valid request'
+    
+    if command == "%2list-groups":
+        return list_groups(body.get("channel_name"))
     
     response = dict()
     response['duration'] = "{} ms".format(
