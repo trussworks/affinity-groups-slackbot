@@ -34,8 +34,7 @@ def oauth_URI(scope, client_id, redirect_uri):
 
 def handler(event, context):
       start_t = time.time()
-      log("Received event", dict(event=event))
-      log("Decoded body", dict(event['body']))
+      log("Received event", dict(something=event))
 
       # parse the event and see which slash command was called
       # redirect to the correct method in bot.py
