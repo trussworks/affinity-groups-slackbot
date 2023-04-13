@@ -6,7 +6,6 @@ from groups_read import get_groups_list
 from groups_write import invite_user_to_group, request_to_join_group
 
 import os
-import urllib
 
 INVALID_REQUEST_ERROR = (
     "Sorry your request is invalid"
@@ -45,7 +44,6 @@ def confirm_invite(invite):
 
 def handle_slash_commands(base64body):
     body = decode_body(base64body)
-    print(body)
 
     if not _is_request_valid(body.get("token"), body.get("team_id")):
         return INVALID_REQUEST_ERROR
@@ -98,9 +96,7 @@ def slack_web_client(token=os.environ["SLACK_BOT_USER_TOKEN"]):
 
 
 def handler(event, _):
-    print(event)
     if event.get("queryStringParameters"):
-        print(event.get("queryStringParameters"))
         return confirm_invite(event.get("queryStringParameters"))
         
     if event.get("body"):
