@@ -54,10 +54,10 @@ def handle_slash_commands(base64body):
 
 
     command = unquote(body.get("command"))
-    if command == "/list-groups" or command == "/test_list":
+    if command == "/list-groups":
         return get_groups_list(slack_web_client())
 
-    if command == "/join-group" or command == "/test_join":
+    if command == "/join-group":
         user_id = body.get("user_id")
         channel_name = body.get("text")
         oauth_uri = oauth_URI(
