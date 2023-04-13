@@ -3,7 +3,6 @@ from base64 import b64decode
 
 from groups_read import get_groups_list
 
-import time
 import os
 
 PRIVATE_MESSAGE_NUDGE = "Please direct message me to get the list or join a channel. :slightly_smiling_face:"          
@@ -49,8 +48,7 @@ def list_groups(channel_name):
     return get_groups_list(slack_web_client())
       
 
-def handler(event, context):
-    start_t = time.time()
+def handler(event, _):
     print(event)
     body = decode_body(event["body"])
     
@@ -62,9 +60,4 @@ def handler(event, context):
     if command == "%2list-groups" or command == "%2test_list":
         return list_groups(body.get("channel_name"))
     
-    response = dict()
-    response['duration'] = "{} ms".format(
-        round(1000 * (time.time() - start_t), 2))
-
-    log("Response", response)
-    return response
+    raise NotImplementedError
