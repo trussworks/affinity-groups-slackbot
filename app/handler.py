@@ -36,14 +36,15 @@ def handler(event, context):
       start_t = time.time()
       body = event["body"]
       log("Body:", event["body"])
-      log("Body serialied?", json.dumps((event["body"])))
+      print(json.dumps(event["body"]))
+      print(b64decode(event["body"]))
 
-      body_bytes = body.encode('ascii')
-      log("Encode body as bytes", body_bytes)
-      base64_body_bytes = b64decode(body_bytes)
-      log("Decode bytes of body", base64_body_bytes)
-      decoded_body = base64_body_bytes.decode('ascii')
-      log("Decoded body", decoded_body)
+    #   body_bytes = body.encode('ascii')
+    #   log("Encode body as bytes", body_bytes)
+    #   base64_body_bytes = b64decode(body_bytes)
+    #   log("Decode bytes of body", base64_body_bytes)
+    #   decoded_body = base64_body_bytes.decode('ascii')
+    #   log("Decoded body", decoded_body)
 
       # parse the event and see which slash command was called
       # redirect to the correct method in bot.py
