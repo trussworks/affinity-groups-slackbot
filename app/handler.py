@@ -31,31 +31,26 @@ def oauth_URI(scope, client_id, redirect_uri):
         f"&client_id={ client_id }&redirect_uri={ redirect_uri }"
     )
 
+def decode_body(body):
+    decoded_body = b64decode(body).decode('ascii')
+    pairs = decoded_body.split("&")
+    return dict(pair.split("=") for pair in
+                    pairs)
+      
 
 def handler(event, context):
-      start_t = time.time()
-      body = b64decode(event["body"]).decode('utf-8')
-      print(body)
-      pairs = body.split("&")
-      body_dict = dict(pair.split("=") for pair in
-                       pairs)
-      print(body_dict)
+    start_t = time.time()
+    body = decode_body(event["body"])
+    print(body)
+    # command = body.get("command")
+    # # command starts with %2 for some reason
+    # sanitized_command = 
 
-    #   body_bytes = body.encode('ascii')
-    #   log("Encode body as bytes", body_bytes)
-    #   base64_body_bytes = b64decode(body_bytes)
-    #   log("Decode bytes of body", base64_body_bytes)
-    #   decoded_body = base64_body_bytes.decode('ascii')
-    #   log("Decoded body", decoded_body)
+    client = WebClient(token='token')
+    
+    response = dict()
+    response['duration'] = "{} ms".format(
+        round(1000 * (time.time() - start_t), 2))
 
-      # parse the event and see which slash command was called
-      # redirect to the correct method in bot.py
-
-      client = WebClient(token='token')
-      
-      response = dict()
-      response['duration'] = "{} ms".format(
-          round(1000 * (time.time() - start_t), 2))
-
-      log("Response", response)
-      return response
+    log("Response", response)
+    return response
