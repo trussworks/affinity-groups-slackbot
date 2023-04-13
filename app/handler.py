@@ -1,8 +1,9 @@
 from slack import WebClient
 from base64 import b64decode
+from urllib.parse import unquote
 
 from groups_read import get_groups_list
-from groups_write import request_to_join_group
+from groups_write import invite_user_to_group, request_to_join_group
 
 import os
 import urllib
@@ -19,6 +20,27 @@ def _is_request_valid(token, team_id):
 
 def _is_private_message(channel_name):
     return channel_name == "directmessage"
+
+
+def confirm_invite(invite):
+    auth_code = invite["code"]
+    client = slack_web_client("")
+
+    response = client.oauth_access(
+        client_id=os.environ["SLACK_CLIENT_ID"],
+        client_secret=os.environ["SLACK_CLIENT_SECRET"],
+        code=auth_code,
+        redirect_uri=os.environ["REDIRECT_URI"],
+    )
+
+    oauth_token = response["access_token"]
+    raw_state = unquote(invite["state"])
+
+    # Permissions note:
+    # This must be a user token (xoxp) from a user who is already in the private channel.
+    return invite_user_to_group(
+        slack_web_client(oauth_token), slack_web_client(), raw_state
+    )
 
 
 def query_team_id():
@@ -49,29 +71,34 @@ def slack_web_client(token=os.environ["SLACK_BOT_USER_TOKEN"]):
 
 
 def handler(event, _):
-    print(event)
-    body = decode_body(event["body"])
-    print(body)
-
-    if not _is_request_valid(body.get("token"), body.get("team_id")):
-        return INVALID_REQUEST_ERROR
-
-
-    if not _is_private_message(body.get("channel_name")):
-        return PRIVATE_MESSAGE_NUDGE
-
-
-    command = urllib.parse.unquote(body.get("command"))
-    if command == "/list-groups" or command == "/test_list":
-        return get_groups_list(slack_web_client())
-
-    if command == "/join-group" or command == "/test_join":
-        user_id = body.get("user_id")
-        channel_name = body.get("text")
-        oauth_uri = oauth_URI(
-             "groups:write", os.environ["SLACK_CLIENT_ID"], os.environ["REDIRECT_URI"]
-            )
+    #determine if its a confirm invite which has query_string blah blah blah
+    if event['queryStringParameters']:
+        return confirm_invite(event['queryStringParameters'])
         
-        return request_to_join_group(
-                slack_web_client(), user_id, channel_name, oauth_uri
-            )
+    if event['body']:
+        print(event)
+        body = decode_body(event["body"])
+        print(body)
+
+        if not _is_request_valid(body.get("token"), body.get("team_id")):
+            return INVALID_REQUEST_ERROR
+
+
+        if not _is_private_message(body.get("channel_name")):
+            return PRIVATE_MESSAGE_NUDGE
+
+
+        command = unquote(body.get("command"))
+        if command == "/list-groups" or command == "/test_list":
+            return get_groups_list(slack_web_client())
+
+        if command == "/join-group" or command == "/test_join":
+            user_id = body.get("user_id")
+            channel_name = body.get("text")
+            oauth_uri = oauth_URI(
+                "groups:write", os.environ["SLACK_CLIENT_ID"], os.environ["REDIRECT_URI"]
+                )
+            
+            return request_to_join_group(
+                    slack_web_client(), user_id, channel_name, oauth_uri
+                )
