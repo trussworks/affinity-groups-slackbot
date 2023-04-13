@@ -8,16 +8,16 @@ import os
 
 PRIVATE_MESSAGE_NUDGE = "Please direct message me to get the list or join a channel. :slightly_smiling_face:"          
 
-def _is_request_valid(token, slack_bot_token):
-    return token == os.environ["SLACK_VERIFICATION_TOKEN"] and team_id == query_team_id(slack_bot_token)
+def _is_request_valid(token):
+    return token == os.environ["SLACK_VERIFICATION_TOKEN"] and team_id == query_team_id()
 
 
 def _is_private_message(channel_name):
     return channel_name == "directmessage"
 
 
-def query_team_id(slack_bot_token):
-    client = WebClient(token=slack_bot_token)
+def query_team_id():
+    client = WebClient(token=os.environ["SLACK_BOT_USER_TOKEN"])
     response = client.api_call(api_method="team.info")
     if not response["ok"]:
         raise AssertionError
