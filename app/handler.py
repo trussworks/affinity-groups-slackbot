@@ -1,7 +1,7 @@
 from slack import WebClient
 from base64 import b64decode
 
-from app.groups_read import get_groups_list
+from groups_read import get_groups_list
 
 import time
 import os
