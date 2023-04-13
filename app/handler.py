@@ -68,10 +68,10 @@ def handler(event, _):
     if command == "/join-group" or command == "/test_join":
         user_id = body.get("user_id")
         channel_name = body.get("text")
-        oauth_URI = oauth_URI(
+        oauth_uri = oauth_URI(
              "groups:write", os.environ["SLACK_CLIENT_SECRET"], os.environ["REDIRECT_URI"]
             )
         
         return request_to_join_group(
-                slack_web_client(), user_id, channel_name, oauth_URI
+                slack_web_client(), user_id, channel_name, oauth_uri
             )
