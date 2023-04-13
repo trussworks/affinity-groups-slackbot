@@ -4,6 +4,7 @@ from base64 import b64decode
 from groups_read import get_groups_list
 
 import os
+import urllib
 
 PRIVATE_MESSAGE_NUDGE = "Please direct message me to get the list or join a channel. :slightly_smiling_face:"          
 
@@ -56,8 +57,8 @@ def handler(event, _):
     if not _is_request_valid(body.get("token"), body.get("team_id")):
         return 'this is not a valid request'
     
-    command = body.get("command").split("%2F")[1]
-    if command == "list-groups" or command == "test_list":
+    command = urllib.parse.unquote(body.get("command"))
+    if command == "/list-groups" or command == "/test_list":
         print("command test_list called")
         return list_groups(body.get("channel_name"))
     
