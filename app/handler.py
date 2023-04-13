@@ -8,7 +8,7 @@ import os
 
 PRIVATE_MESSAGE_NUDGE = "Please direct message me to get the list or join a channel. :slightly_smiling_face:"          
 
-def _is_request_valid(token):
+def _is_request_valid(token, team_id):
     return token == os.environ["SLACK_VERIFICATION_TOKEN"] and team_id == query_team_id()
 
 
