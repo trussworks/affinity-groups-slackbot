@@ -104,4 +104,4 @@ def handler(event, _):
         return confirm_invite(event.get("queryStringParameters"))
         
     if event.get("body"):
-        handle_slash_commands(event.get("body"))
+        return handle_slash_commands(event.get("body"))
