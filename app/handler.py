@@ -36,7 +36,7 @@ def handler(event, context):
       start_t = time.time()
       body = event["body"]
       log("Body:", event["body"])
-      log("Body type:", type(event["body"]))
+      log("Body serialied?", json.dumps((event["body"])))
 
       body_bytes = body.encode('ascii')
       log("Encode body as bytes", body_bytes)
