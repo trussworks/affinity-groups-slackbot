@@ -69,7 +69,7 @@ def handler(event, _):
         user_id = body.get("user_id")
         channel_name = body.get("text")
         oauth_uri = oauth_URI(
-             "groups:write", os.environ["SLACK_CLIENT_SECRET"], os.environ["REDIRECT_URI"]
+             "groups:write", os.environ["SLACK_CLIENT_ID"], os.environ["REDIRECT_URI"]
             )
         
         return request_to_join_group(
