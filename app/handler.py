@@ -51,13 +51,14 @@ def list_groups(channel_name):
 def handler(event, _):
     print(event)
     body = decode_body(event["body"])
-    
-    command = body.get("command")
+    print(body)
     
     if not _is_request_valid(body.get("token"), body.get("team_id")):
         return 'this is not a valid request'
     
+    command = body.get("command")
     if command == "%2list-groups" or command == "%2test_list":
+        print("command test_list called")
         return list_groups(body.get("channel_name"))
     
     raise NotImplementedError

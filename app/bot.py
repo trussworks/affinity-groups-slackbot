@@ -1,29 +1,7 @@
 from urllib.parse import unquote
 
 from slack import WebClient
-
-from groups_read import get_groups_list
 from groups_write import invite_user_to_group, request_to_join_group
-
-
-def slack_web_client(token=current_app.config["SLACK_BOT_USER_TOKEN"]):
-    return WebClient(token=token)
-
-
-def list_groups():
-    form_data = request.form
-    if not _is_request_valid(
-        form_data,
-        current_app.config["SLACK_VERIFICATION_TOKEN"],
-        current_app.config["SLACK_TEAM_ID"],
-    ):
-        abort(400)
-
-    if not _is_private_message(form_data):
-        return PRIVATE_MESSAGE_NUDGE
-
-    return get_groups_list(slack_web_client())
-
 
 def join_channel():
     form_data = request.form
