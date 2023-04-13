@@ -8,8 +8,8 @@ import os
 
 PRIVATE_MESSAGE_NUDGE = "Please direct message me to get the list or join a channel. :slightly_smiling_face:"          
 
-def _is_request_valid(token, team_id):
-    return token == os.environ["SLACK_VERIFICATION_TOKEN"] and team_id == os.environ["SLACK_TEAM_ID"]
+def _is_request_valid(token, slack_bot_token):
+    return token == os.environ["SLACK_VERIFICATION_TOKEN"] and team_id == query_team_id(slack_bot_token)
 
 
 def _is_private_message(channel_name):
@@ -59,7 +59,7 @@ def handler(event, context):
     if not _is_request_valid(body.get("token"), body.get("team_id")):
         return 'this is not a valid request'
     
-    if command == "%2list-groups":
+    if command == "%2list-groups" or command == "%2test_list":
         return list_groups(body.get("channel_name"))
     
     response = dict()
