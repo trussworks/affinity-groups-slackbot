@@ -43,6 +43,33 @@ def confirm_invite(invite):
     )
 
 
+def handle_slash_commands(base64body):
+    body = decode_body(base64body)
+    print(body)
+
+    if not _is_request_valid(body.get("token"), body.get("team_id")):
+        return INVALID_REQUEST_ERROR
+
+
+    if not _is_private_message(body.get("channel_name")):
+        return PRIVATE_MESSAGE_NUDGE
+
+
+    command = unquote(body.get("command"))
+    if command == "/list-groups" or command == "/test_list":
+        return get_groups_list(slack_web_client())
+
+    if command == "/join-group" or command == "/test_join":
+        user_id = body.get("user_id")
+        channel_name = body.get("text")
+        oauth_uri = oauth_URI(
+            "groups:write", os.environ["SLACK_CLIENT_ID"], os.environ["REDIRECT_URI"]
+            )
+        
+        return request_to_join_group(
+                slack_web_client(), user_id, channel_name, oauth_uri
+            )
+
 def query_team_id():
     client = WebClient(token=os.environ["SLACK_BOT_USER_TOKEN"])
     response = client.api_call(api_method="team.info")
@@ -71,34 +98,10 @@ def slack_web_client(token=os.environ["SLACK_BOT_USER_TOKEN"]):
 
 
 def handler(event, _):
-    #determine if its a confirm invite which has query_string blah blah blah
-    if event['queryStringParameters']:
-        return confirm_invite(event['queryStringParameters'])
+    print(event)
+    if event.get("queryStringParameters"):
+        print(event.get("queryStringParameters"))
+        return confirm_invite(event.get("queryStringParameters"))
         
-    if event['body']:
-        print(event)
-        body = decode_body(event["body"])
-        print(body)
-
-        if not _is_request_valid(body.get("token"), body.get("team_id")):
-            return INVALID_REQUEST_ERROR
-
-
-        if not _is_private_message(body.get("channel_name")):
-            return PRIVATE_MESSAGE_NUDGE
-
-
-        command = unquote(body.get("command"))
-        if command == "/list-groups" or command == "/test_list":
-            return get_groups_list(slack_web_client())
-
-        if command == "/join-group" or command == "/test_join":
-            user_id = body.get("user_id")
-            channel_name = body.get("text")
-            oauth_uri = oauth_URI(
-                "groups:write", os.environ["SLACK_CLIENT_ID"], os.environ["REDIRECT_URI"]
-                )
-            
-            return request_to_join_group(
-                    slack_web_client(), user_id, channel_name, oauth_uri
-                )
+    if event.get("body"):
+        handle_slash_commands(event.get("body"))
