@@ -56,8 +56,8 @@ def handler(event, _):
     if not _is_request_valid(body.get("token"), body.get("team_id")):
         return 'this is not a valid request'
     
-    command = body.get("command")
-    if command == "%2list-groups" or command == "%2test_list":
+    command = body.get("command").split("%2F")[1]
+    if command == "list-groups" or command == "test_list":
         print("command test_list called")
         return list_groups(body.get("channel_name"))
     
