@@ -8,12 +8,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.9"
 slackclient = "^2.9.4"
-flask = "^2.2.3"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.2"
-pytest-flask = "^1.2.0"
 flake8 = "^6.0.0"
 isort = "^5.12.0"
 
