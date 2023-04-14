@@ -26,18 +26,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@9149ade017c57f86dea2f76a01f8b2d5bd06b10f # tag=v1
 
-      - name: Login to ECR
-        uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # tag=v2
-        with:
-          registry: ${{ steps.login-ecr.outputs.registry }}
-
       - name: Construct image URI
         id: construct-image-uri
         env:
           GIT_BRANCH: ${{ github.ref_name }}
           GIT_COMMIT: ${{ github.sha }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          DEPLOY_ENV: ${{ inputs.deploy-env }}
         shell: bash
         run: |
           BRANCH_PREFIX="$GIT_BRANCH"
@@ -61,7 +55,6 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.construct-image-uri.outputs.image-uri }}
-          labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD=${{ github.sha }}
           provenance: false
