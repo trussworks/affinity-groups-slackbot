@@ -29,16 +29,4 @@ You can run the tests from project root with command `poetry run pytest`.
 
 For Truss's instance of this bot, we have configured this to happen automatically on new commits to the `main` branch.
 GitHub Actions will build and push the docker image to an ECR repository in the `trussworks-prod` AWS account.
-In order to redeploy the lambda with the new image. You must copy and replace the image URI into the Terraform located in `trussworks-prod/affinity-groups-slackbot/main.tf` then apply.
-
-```
-module "lambda_affinity_groups" {
-  source = "terraform-aws-modules/lambda/aws"
-
-    ...
-
-  image_uri    = REPLACE WITH COPIED IMAGE URI
-
-  ...
-}
-```
+In order to redeploy the lambda with the new image. You must copy and replace the image uri of the latest image into the Terraform located in `trussworks-prod/affinity-groups-slackbot/main.tf` for `local.image_uri` then apply.
