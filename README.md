@@ -9,7 +9,6 @@ To work with the slackbot & test locally, you'll need:
 
 - Python 3.6 or higher
   - Poetry
-- Some environment variables as described in installation below
 - Some linting is performed by pre-commit, so don't forget to `pre-commit install`
 
 
