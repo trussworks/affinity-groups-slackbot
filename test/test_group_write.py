@@ -1,6 +1,6 @@
 from unittest import TestCase, mock
 
-from app.groups_write import (
+from groups_write import (
     STATE_DIVIDER,
     UNKNOWN_CHANNEL_ERROR,
     invite_user_to_group,
