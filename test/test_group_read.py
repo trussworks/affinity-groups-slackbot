@@ -1,6 +1,6 @@
 from unittest import TestCase, mock
 
-from app.groups_read import get_groups_list
+from groups_read import get_groups_list
 
 
 class GetGroupsListTests(TestCase):
