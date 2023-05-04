@@ -34,7 +34,9 @@ class RequestToJoinGroupTests(TestCase):
         MockClient.return_value.api_call.return_value = mock_channels_response
 
         # act
-        actual = request_to_join_group(MockClient(), mock_user_id, mock_channel_name, mock_oauth_uri)
+        actual = request_to_join_group(
+            MockClient(), mock_user_id, mock_channel_name, mock_oauth_uri
+        )
 
         # assert
         assert actual == UNKNOWN_CHANNEL_ERROR
@@ -61,7 +63,9 @@ class RequestToJoinGroupTests(TestCase):
         MockClient.return_value.chat_postMessage.return_value = mock_chat_api_response
 
         # act
-        request_to_join_group(MockClient(), mock_user_id, mock_channel_name, mock_oauth_uri)
+        request_to_join_group(
+            MockClient(), mock_user_id, mock_channel_name, mock_oauth_uri
+        )
 
         # assert
         MockClient.return_value.chat_postMessage.assert_called_once()
@@ -80,7 +84,9 @@ class RequestToJoinGroupTests(TestCase):
         mock_lookup_id.return_value = "mock channel id"
 
         with self.assertRaises(AssertionError):
-            request_to_join_group(MockClient(),  mock_user_id, mock_channel_name, "http://example.com")
+            request_to_join_group(
+                MockClient(), mock_user_id, mock_channel_name, mock_oauth_uri
+            )
 
     @mock.patch("slack.web.slack_response.SlackResponse")
     @mock.patch("slack.WebClient")
@@ -146,7 +152,9 @@ class RequestToJoinGroupTests(TestCase):
         MockClient.return_value.chat_update.return_value = {"ok": False}
         # act
         with self.assertRaises(AssertionError):
-            request_to_join_group(MockClient(), mock_user_id, mock_channel_name, mock_oauth_uri)
+            request_to_join_group(
+                MockClient(), mock_user_id, mock_channel_name, mock_oauth_uri
+            )
 
 
 class InviteUserToGroupTests(TestCase):

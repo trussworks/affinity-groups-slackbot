@@ -1,6 +1,5 @@
-from unittest import TestCase, mock
-
 import os
+from unittest import TestCase, mock
 
 
 class QueryTeamIdTests(TestCase):
@@ -11,6 +10,7 @@ class QueryTeamIdTests(TestCase):
         SlackClient.return_value.api_call.return_value = mock_api_response
 
         from handler import query_team_id
+
         team_id = query_team_id()
 
         SlackClient.return_value.api_call.assert_called_once()
