@@ -10,6 +10,6 @@ on:
 
 jobs:
   validate:
-    uses: trussworks/shared-actions/.github/workflows/validate-python.yml@validate-python
+    uses: trussworks/shared-actions/.github/workflows/validate-python.yml@main
     with:
       python-version: "3.9"
