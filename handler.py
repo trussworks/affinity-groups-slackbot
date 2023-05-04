@@ -1,20 +1,21 @@
-from slack import WebClient
+import os
 from base64 import b64decode
 from urllib.parse import unquote
+
+from slack import WebClient
 
 from groups_read import get_groups_list
 from groups_write import invite_user_to_group, request_to_join_group
 
-import os
+INVALID_REQUEST_ERROR = "Sorry your request is invalid"
 
-INVALID_REQUEST_ERROR = (
-    "Sorry your request is invalid"
-)
+PRIVATE_MESSAGE_NUDGE = "Please direct message me to get the list or join a channel. :slightly_smiling_face:"
 
-PRIVATE_MESSAGE_NUDGE = "Please direct message me to get the list or join a channel. :slightly_smiling_face:"          
 
 def _is_request_valid(token, team_id):
-    return token == os.environ["SLACK_VERIFICATION_TOKEN"] and team_id == query_team_id()
+    return (
+        token == os.environ["SLACK_VERIFICATION_TOKEN"] and team_id == query_team_id()
+    )
 
 
 def _is_private_message(channel_name):
@@ -48,10 +49,8 @@ def handle_slash_commands(base64body):
     if not _is_request_valid(body.get("token"), body.get("team_id")):
         return INVALID_REQUEST_ERROR
 
-
     if not _is_private_message(body.get("channel_name")):
         return PRIVATE_MESSAGE_NUDGE
-
 
     command = unquote(body.get("command"))
     if command == "/list-groups":
@@ -62,11 +61,12 @@ def handle_slash_commands(base64body):
         channel_name = body.get("text")
         oauth_uri = oauth_URI(
             "groups:write", os.environ["SLACK_CLIENT_ID"], os.environ["REDIRECT_URI"]
-            )
-        
+        )
+
         return request_to_join_group(
-                slack_web_client(), user_id, channel_name, oauth_uri
-            )
+            slack_web_client(), user_id, channel_name, oauth_uri
+        )
+
 
 def query_team_id():
     client = WebClient(token=os.environ["SLACK_BOT_USER_TOKEN"])
@@ -83,12 +83,12 @@ def oauth_URI(scope, client_id, redirect_uri):
         f"&client_id={ client_id }&redirect_uri={ redirect_uri }"
     )
 
+
 def decode_body(body):
-    decoded_body = b64decode(body).decode('utf-8')
+    decoded_body = b64decode(body).decode("utf-8")
     pairs = decoded_body.split("&")
 
-    return dict(pair.split("=") for pair in
-                    pairs)
+    return dict(pair.split("=") for pair in pairs)
 
 
 def slack_web_client(token=os.environ["SLACK_BOT_USER_TOKEN"]):
@@ -98,6 +98,6 @@ def slack_web_client(token=os.environ["SLACK_BOT_USER_TOKEN"]):
 def handler(event, _):
     if event.get("queryStringParameters"):
         return confirm_invite(event.get("queryStringParameters"))
-        
+
     if event.get("body"):
         return handle_slash_commands(event.get("body"))
