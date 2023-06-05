@@ -9,5 +9,7 @@ on:
 
 jobs:
   validate:
-    uses: trussworks/shared-actions/.github/workflows/aws-ecr.yml@main
+    uses: trussworks/shared-actions/.github/workflows/aws-ecr.yml@add-aws-region-input-ecr
     secrets: inherit
+    with:
+      aws-region: "us-west-2"
