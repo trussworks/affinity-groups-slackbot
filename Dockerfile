@@ -1,4 +1,4 @@
-FROM python:3.10-slim-bullseye as python-build-stage
+FROM python:3.11-slim-bullseye as python-build-stage
 WORKDIR /src
 
 RUN apt-get update && apt-get upgrade -y \
@@ -11,7 +11,7 @@ RUN pip install --isolated --no-cache-dir --no-input poetry \
     && poetry config virtualenvs.create false \
     && poetry install --no-interaction --without=dev
 
-FROM public.ecr.aws/lambda/python:3.9 as python-run-stage
+FROM public.ecr.aws/lambda/python:3.10 as python-run-stage
 
 COPY --from=python-build-stage /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 ENV PYTHONPATH=/usr/local/lib/python3.10/site-packages
