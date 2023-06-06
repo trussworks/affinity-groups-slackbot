@@ -28,9 +28,6 @@
     "pre-commit": {
         "enabled": true
     },
-    "python": {
-        "enabled": false
-    },
     "schedule": [
         "every weekday",
         "after 9am and before 5pm"
