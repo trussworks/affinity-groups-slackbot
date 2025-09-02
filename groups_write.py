@@ -28,7 +28,7 @@ def _get_invite_user_blocks(user_id, channel_id, oauth_URI, message_ts=""):
                         "type": "plain_text",
                         "text": "✅ Confirm invite",
                     },
-                    "url": f"{ oauth_URI }&state={ STATE_DIVIDER.join([user_id, channel_id, message_ts]) }",
+                    "url": f"{oauth_URI}&state={STATE_DIVIDER.join([user_id, channel_id, message_ts])}",
                 }
             ],
         },
@@ -72,7 +72,7 @@ def request_to_join_group(client, user_id, channel_name, oauth_URI):
 
     return (
         "Alright! I've posted the following message to the private channel:\n"
-        f"> { _get_invite_string_for_user(user_requesting_to_join) }"
+        f"> {_get_invite_string_for_user(user_requesting_to_join)}"
     )
 
 
