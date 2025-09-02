@@ -13,3 +13,4 @@ jobs:
     uses: trussworks/shared-actions/.github/workflows/validate-python.yml@637d269a81479673b19d9e7b02b98d75b1805b46 #v0.1.1
     with:
       python-version: "3.13"
+      poetry-version: "2.1.4"
