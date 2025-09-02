@@ -79,8 +79,8 @@ def query_team_id():
 
 def oauth_URI(scope, client_id, redirect_uri):
     return (
-        f"https://slack.com/oauth/authorize?scope={ scope }"
-        f"&client_id={ client_id }&redirect_uri={ redirect_uri }"
+        f"https://slack.com/oauth/authorize?scope={scope}"
+        f"&client_id={client_id}&redirect_uri={redirect_uri}"
     )
 
 

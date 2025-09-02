@@ -43,8 +43,8 @@ def _build_list_response(slack_response):
 
     response = RESPONSE_BASE
     for c in channels:
-        response += f":slack: *{ c['name'] }* --"
+        response += f":slack: *{c['name']}* --"
         response += "(No topic provided)" if c["topic"] == "" else c["topic"]
-        response += f" -- `/join-group { c['name'] }`\n"
+        response += f" -- `/join-group {c['name']}`\n"
 
     return response
