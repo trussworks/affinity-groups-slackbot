@@ -11,7 +11,7 @@ RUN pip install --isolated --no-cache-dir --no-input poetry \
     && poetry config virtualenvs.create false \
     && poetry install --no-interaction --without=dev
 
-FROM public.ecr.aws/lambda/python:3.13 AS python-run-stage
+FROM public.ecr.aws/lambda/python:3.14 AS python-run-stage
 
 COPY --from=python-build-stage /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 ENV PYTHONPATH=/usr/local/lib/python3.13/site-packages
